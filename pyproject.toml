@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "ton-bot"
+version = "0.1.0"
+description = ""
+authors = ["Kkkasum <kasum2605@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiogram = "^3.4.1"
+pydantic-settings = "^2.2.1"
+pytoniq-core = "^0.1.31"
+pytonapi = "^0.2.0"
+loguru = "^0.7.2"
+gql = "^3.5.0"
+redis = "^5.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
