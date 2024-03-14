@@ -5,6 +5,7 @@ from aiogram.exceptions import TelegramBadRequest
 
 from pytoniq_core import Address, AddressError
 
+from src.bot.middleware import AntifloodMiddleware
 from src.bot.keyboards import jetton_kb, jetton_info_kb, dexes_kb, JettonCallbackFactory, DEXCallbackFactory
 from src.common import r
 from src.jetton import jettons
@@ -13,6 +14,7 @@ from src.utils.formatters import format_jetton_info, format_dex_pools
 
 
 router = Router()
+router.callback_query.middleware(AntifloodMiddleware())
 
 
 @router.message(Command('jetton'))
