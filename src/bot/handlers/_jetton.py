@@ -1,41 +1,47 @@
-from aiogram import Router, types
-from aiogram.filters import Command, StateFilter
+from aiogram import Router, F, types
+from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.exceptions import TelegramBadRequest
 
 from pytoniq_core import Address, AddressError
 
 from src.bot.middleware import AntifloodMiddleware
-from src.bot.keyboards import jetton_kb, jetton_info_kb, dexes_kb, JettonCallbackFactory, DEXCallbackFactory
 from src.common import r
 from src.jetton import jettons
 from src.utils import messages as msg
 from src.utils.formatters import format_jetton_info, format_dex_pools
+from src.bot.keyboards import (
+    jetton_kb,
+    jetton_info_kb,
+    dexes_kb,
+    MenuCallbackFactory,
+    JettonCallbackFactory,
+    DEXCallbackFactory
+)
 
 
 router = Router()
 router.callback_query.middleware(AntifloodMiddleware())
 
 
-@router.message(Command('jetton'))
-async def jetton(message: types.Message):
-    await message.answer(text=msg.jetton_msg, reply_markup=jetton_kb())
+@router.callback_query(MenuCallbackFactory.filter(F.page == 'jetton'))
+async def jetton_menu(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
+    await callback.message.edit_text(text=msg.jetton, reply_markup=jetton_kb())
 
 
 @router.callback_query(JettonCallbackFactory.filter())
 async def jetton_callback(callback: types.CallbackQuery, callback_data: JettonCallbackFactory, state: FSMContext):
     if callback_data.page == 'contract':
-        await callback.message.edit_text(text=msg.jetton_contract_msg)
+        await callback.message.edit_text(text=msg.jetton_contract)
         await state.set_state('jetton_contract')
 
     if callback_data.page == 'name':
-        await callback.message.edit_text(text=msg.jetton_name_msg)
+        await callback.message.edit_text(text=msg.jetton_name)
         await state.set_state('jetton_name')
 
     if callback_data.page == 'dexes':
         dexes = await jettons.get_dexes()
-
-        await callback.message.answer(text=msg.jetton_dexes_msg, reply_markup=dexes_kb(dexes))
+        await callback.message.answer(text=msg.jetton_dexes, reply_markup=dexes_kb(dexes))
 
 
 @router.message(StateFilter('jetton_contract'))
@@ -56,8 +62,8 @@ async def jetton_contract(message: types.Message, state: FSMContext):
         await r.set(name=message.from_user.id, value=jetton_addr.to_str(is_user_friendly=False))
         await state.clear()
     except AddressError:
-        await message.answer(text=msg.jetton_contract_error_msg)
-        await message.answer(text=msg.jetton_contract_msg)
+        await message.answer(text=msg.jetton_contract_error)
+        await message.answer(text=msg.jetton_contract)
 
 
 @router.message(StateFilter('jetton_name'))

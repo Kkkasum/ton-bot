@@ -1,17 +1,17 @@
-from aiogram import Router, types
-from aiogram.filters import Command, StateFilter
+from aiogram import Router, F, types
+from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 
 from src.utils import messages as msg
-from src.bot.keyboards import app_kb, AppCallbackFactory
+from src.bot.keyboards import app_kb, AppCallbackFactory, MenuCallbackFactory
 
 
 router = Router()
 
 
-@router.message(Command('app'))
-async def app(message: types.Message):
-    await message.answer(text=msg.app_msg, reply_markup=app_kb())
+@router.callback_query(MenuCallbackFactory.filter(F.page == 'app'))
+async def app(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
+    await callback.message.answer(text=msg.app, reply_markup=app_kb())
 
 
 @router.callback_query(AppCallbackFactory.filter())

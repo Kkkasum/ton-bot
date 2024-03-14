@@ -1,6 +1,7 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardMarkup, WebAppInfo
 from aiogram.filters.callback_data import CallbackData
 
+from ._menu_kb import MenuCallbackFactory
 from src.nft import NftCollection, NftItem
 
 
@@ -17,6 +18,9 @@ def nft_kb() -> InlineKeyboardMarkup:
 
     builder.button(text='По адресу контракта', callback_data=NftCallbackFactory(page='contract'))
     builder.button(text='По названию', callback_data=NftCallbackFactory(page='name'))
+    builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
+
+    builder.adjust(1, 1, 1)
 
     return builder.as_markup()
 
@@ -28,6 +32,10 @@ def nft_search_kb(by_contract: bool = False) -> InlineKeyboardMarkup:
 
     if by_contract:
         builder.button(text='Поиск NFT', callback_data=NftCallbackFactory(page='search_nft'))
+
+    builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
+
+    builder.adjust(1, 1, 1)
 
     return builder.as_markup()
 
