@@ -28,6 +28,10 @@ class CollectionStats(BaseModel):
     items_count: int
     total_volume: int
 
+    @property
+    def volume(self) -> float:
+        return self.total_volume / 10 ** 9
+
 
 class Collection(BaseModel):
     name: str
@@ -38,9 +42,9 @@ class Collection(BaseModel):
 
 class NftItem(BaseModel):
     name: str
+    collection: Collection
     address: Address
     owner: Address | None
-    collection: Collection
     img: str
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -63,9 +67,9 @@ class NftCollection(BaseModel):
     address: Address
     owner: Address
     description: str
-    img: str
     stats: CollectionStats
     social_links: list[str] | None
+    img: str
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 

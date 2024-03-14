@@ -1,11 +1,13 @@
-# Token
-token_msg = 'Получить информацию о токене можно следующими способами:'
+# Jetton
+jetton_msg = 'Получить информацию о токене можно следующими способами:'
 
-token_contract_msg = 'Введите адрес токена'
+jetton_contract_msg = 'Введите адрес токена'
 
-token_name_msg = 'Выберите тикер токена:'
+jetton_name_msg = 'Выберите тикер токена:'
 
-token_contract_error_msg = 'Вы ввели неправильный адрес токена'
+jetton_contract_error_msg = 'Вы ввели неправильный адрес токена'
+
+jetton_dexes_msg = 'Выберите DEX:'
 
 # NFT
 nft_msg = 'Получить информацию об NFT можно следующими способами:'
@@ -16,7 +18,7 @@ nft_search_collection_msg = 'Введите адрес коллекции'
 
 nft_search_nft_msg = 'Введите адрес NFT'
 
-nft_collection_history_msg = 'Выберите период история продаж:'
+nft_collection_history_msg = 'Выберите период истории продаж:'
 
 nft_name_msg = 'Выберите коллекцию NFT:'
 

@@ -24,7 +24,7 @@ router = Router()
 
 
 @router.message(Command('nft'))
-async def nft(message: types.Message):
+async def cmd_nft(message: types.Message):
     await message.answer(text=msg.nft_msg, reply_markup=nft_kb())
 
 
@@ -45,12 +45,7 @@ async def nft_callback(callback: types.CallbackQuery, callback_data: NftCallback
         await state.set_state('search_nft')
 
     if callback_data.page == 'collection_history':
-        collection_addr = Address(await r.get(name=str(callback.from_user.id)))
-        print(collection_addr.to_str())
-        await callback.message.edit_text(
-            text=msg.nft_collection_history_msg,
-            reply_markup=nft_collection_history(collection_addr.to_str())
-        )
+        await callback.message.answer(text=msg.nft_collection_history_msg, reply_markup=nft_collection_history())
 
 
 @router.message(StateFilter('search_collection'))
@@ -66,6 +61,8 @@ async def search_collection(message: types.Message, state: FSMContext):
             await message.answer_photo(photo=img, caption=m, reply_markup=nft_collection_kb(nft_collection))
         except (AssertionError, TelegramBadRequest):
             await message.answer(text=m, reply_markup=nft_collection_kb(nft_collection))
+
+        await r.set(name=message.from_user.id, value=collection_addr.to_str(is_user_friendly=False))
         await state.clear()
     except AddressError:
         await message.answer(text=msg.nft_contract_error_msg)
@@ -83,18 +80,16 @@ async def search_nft(message: types.Message, state: FSMContext):
 
         try:
             await message.answer_photo(photo=img, caption=m, reply_markup=nft_item_kb(nft_item))
-            await r.set(name=str(message.from_user.id), value=collection_addr.to_str())
         except (AssertionError, TelegramBadRequest):
             await message.answer(text=m, reply_markup=nft_item_kb(nft_item))
+
         await state.clear()
     except AddressError:
         await message.answer(text=msg.nft_contract_error_msg)
         await message.answer(text=msg.nft_search_collection_msg)
 
 
-@router.message(NftCollectionHistoryCallbackFactory.filter())
+@router.callback_query(NftCollectionHistoryCallbackFactory.filter())
 async def collection_history(callback: types.CallbackQuery, callback_data: NftCollectionHistoryCallbackFactory):
-    collection_addr = Address(await r.get(name=str(callback.from_user.id)))
-    print(collection_addr.to_str())
+    collection_addr = Address(str(await r.getdel(name=callback.from_user.id), 'utf-8'))
     history = await gg.get_collection_sales_history(collection_addr=collection_addr, days_count=callback_data.days)
-    print(history)

@@ -1,5 +1,6 @@
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
+from gql.transport.websockets import WebsocketsTransport
 
 from pytoniq_core import Address
 
@@ -10,6 +11,9 @@ class GetGems:
     def __init__(self, url: str):
         self.transport = AIOHTTPTransport(url=url)
         self.client = Client(transport=self.transport, fetch_schema_from_transport=True)
+
+        self.ws_transport = WebsocketsTransport(url=url)
+        self.ws_client = Client(transport=self.ws_transport, fetch_schema_from_transport=True)
 
     async def get_nft_collection_stats(self, collection_addr: Address) -> CollectionStats:
         async with self.client as session:

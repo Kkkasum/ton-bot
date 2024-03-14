@@ -1,10 +1,6 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardMarkup, WebAppInfo
 from aiogram.filters.callback_data import CallbackData
 
-from pytoniq_core import Address
-
-from pydantic import ConfigDict
-
 from src.nft import NftCollection, NftItem
 
 
@@ -13,7 +9,6 @@ class NftCallbackFactory(CallbackData, prefix='nft'):
 
 
 class NftCollectionHistoryCallbackFactory(CallbackData, prefix='nft_collection_history'):
-    address: str
     days: int
 
 
@@ -82,62 +77,54 @@ def nft_item_kb(nft_item: NftItem) -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def nft_collection_history(nft_collection_addr: str) -> InlineKeyboardMarkup:
+def nft_collection_history() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     builder.button(
         text='За 1 день',
         callback_data=NftCollectionHistoryCallbackFactory(
-            address=nft_collection_addr,
             days=1
         )
     )
     builder.button(
         text='За 7 дней',
         callback_data=NftCollectionHistoryCallbackFactory(
-            address=nft_collection_addr,
             days=7
         )
     )
     builder.button(
         text='За 14 дней',
         callback_data=NftCollectionHistoryCallbackFactory(
-            address=nft_collection_addr,
             days=14
         )
     )
     builder.button(
         text='За 30 дней',
         callback_data=NftCollectionHistoryCallbackFactory(
-            address=nft_collection_addr,
             days=30
         )
     )
     builder.button(
         text='За 60 дней',
         callback_data=NftCollectionHistoryCallbackFactory(
-            address=nft_collection_addr,
             days=60
         )
     )
     builder.button(
         text='За 90 дней',
         callback_data=NftCollectionHistoryCallbackFactory(
-            address=nft_collection_addr,
             days=90
         )
     )
     builder.button(
         text='За последний год',
         callback_data=NftCollectionHistoryCallbackFactory(
-            address=nft_collection_addr,
             days=365
         )
     )
     builder.button(
         text='За все время',
         callback_data=NftCollectionHistoryCallbackFactory(
-            address=nft_collection_addr,
             days=1000
         )
     )

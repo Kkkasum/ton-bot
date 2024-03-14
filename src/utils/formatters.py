@@ -1,24 +1,36 @@
-from src.token import TokenPool
+from src.jetton import Token, DEXPools
 from src.nft import NftCollection, NftItem
 
 
-def format_token_data(token_pool: TokenPool) -> str:
-    token_data_msg = f'DEX: {token_pool.dex}\n'\
-                     f'Pool: {token_pool.pool_name}\n'\
-                     f'Price: 💎{token_pool.price_native:.4f} TON (💲{token_pool.price_usd:.4f})\n'
+def format_jetton_info(jetton: Token) -> str:
+    jetton_info_msg = f'Название: <b>{jetton.name}</b> (<b>{jetton.symbol}</b>)\n'\
+                      f'Адрес контракта: <code>{jetton.address.to_str()}</code>\n\n'\
+                      f'Общая эмиссия (Supply): <b>{jetton.supply:.2f}</b>\n'\
+                      f'Количество холдеров: <b>{jetton.holders_count}</b>\n'\
 
-    return token_data_msg
+    return jetton_info_msg
+
+
+def format_dex_pools(dex_pools: DEXPools) -> str:
+    dex_pools_msg = '\n\n'.join([
+                        f'<b>{pool.name}</b>\n'
+                        f'Дата создания: <b>{pool.creation_datetime}</b>\n'
+                        f'Цена {pool.main_jetton}: 💎<b>{pool.price_native:.4f}</b> (💲<b>{pool.price_usd:.4f}</b>)'
+                        for pool in dex_pools.pools
+                    ])
+
+    return dex_pools_msg
 
 
 def format_nft_collection(nft_collection: NftCollection) -> str:
     nft_collection_msg = f'Название: <b>{nft_collection.name}</b>\n'\
-                         f'Адрес коллекции: <code>{nft_collection.address.to_str(is_user_friendly=True)}</code>\n'\
-                         f'Адрес владельца: <code>{nft_collection.owner.to_str(is_user_friendly=True)}</code>\n\n'\
+                         f'Адрес коллекции: <code>{nft_collection.address.to_str()}</code>\n'\
+                         f'Адрес владельца: <code>{nft_collection.owner.to_str()}</code>\n\n'\
                          f'{nft_collection.description}\n\n'\
                          f'Количество холдеров: <b>{nft_collection.stats.holders_count}</b>\n'\
                          f'Количество NFT в коллекции: <b>{nft_collection.stats.items_count}</b>\n'\
                          f'Цена флора: 💎<b>{nft_collection.stats.floor_price}</b>\n'\
-                         f'Объем торгов: 💎<b>{nft_collection.stats.total_volume / 10 ** 9:.2f}</b>\n\n'\
+                         f'Объем торгов: 💎<b>{nft_collection.stats.volume:.2f}</b>\n\n'\
                          f'Ссылки: '\
                          f'{nft_collection.socials}'
 
@@ -28,7 +40,7 @@ def format_nft_collection(nft_collection: NftCollection) -> str:
 def format_nft_item(nft_item: NftItem) -> str:
     nft_item_msg = f'Название: <b>{nft_item.name}</b>\n'\
                    f'Коллекция: <b>{nft_item.collection.name}</b>\n\n'\
-                   f'Адрес NFT: <code>{nft_item.address.to_str(is_user_friendly=True)}</code>\n'\
+                   f'Адрес NFT: <code>{nft_item.address.to_str()}</code>\n'\
                    f'Адрес владельца: <code>{nft_item.owner_address}</code>'
 
     return nft_item_msg
