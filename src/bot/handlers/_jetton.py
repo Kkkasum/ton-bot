@@ -32,7 +32,7 @@ async def jetton_callback(callback: types.CallbackQuery, callback_data: JettonCa
 
     if callback_data.page == 'dexes':
         dexes = await jettons.get_dexes()
-        await callback.message.edit_reply_markup(text=msg.jetton_dexes_msg, reply_markup=dexes_kb(dexes))
+        await callback.message.answer(text=msg.jetton_dexes_msg, reply_markup=dexes_kb(dexes))
         # jetton_addr = Address(str(await r.getdel(name=callback.from_user.id), 'utf-8'))
         # dexes_pools = await jettons.get_dexes_pools(jetton_addr)
         #
@@ -74,4 +74,4 @@ async def dex_callback(callback: types.CallbackQuery, callback_data: DEXCallback
     dex_pools = await jettons.get_dex_pools(callback_data.dex, jetton_addr)
 
     m = format_dex_pools(dex_pools)
-    await callback.message.answer(text=m)
+    await callback.message.edit_text(text=m)
