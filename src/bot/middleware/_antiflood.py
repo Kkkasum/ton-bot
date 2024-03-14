@@ -21,7 +21,7 @@ class AntifloodMiddleware(BaseMiddleware):
 
         try:
             delta = now - datetime.strptime(str(last_message, 'utf-8'), '%Y-%m-%d %H:%M:%S')
-            if delta > timedelta(seconds=1):
+            if delta > timedelta(seconds=0.5):
                 return await handler(event, data)
         except TypeError:
             return await handler(event, data)

@@ -34,13 +34,8 @@ async def jetton_callback(callback: types.CallbackQuery, callback_data: JettonCa
 
     if callback_data.page == 'dexes':
         dexes = await jettons.get_dexes()
+
         await callback.message.answer(text=msg.jetton_dexes_msg, reply_markup=dexes_kb(dexes))
-        # jetton_addr = Address(str(await r.getdel(name=callback.from_user.id), 'utf-8'))
-        # dexes_pools = await jettons.get_dexes_pools(jetton_addr)
-        #
-        # for dexes_pool in dexes_pools:
-        #     m = format_dex_pools(dexes_pool)
-        #     await callback.message.answer(text=m)
 
 
 @router.message(StateFilter('jetton_contract'))
