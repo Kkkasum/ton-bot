@@ -20,7 +20,7 @@ def nft_kb() -> InlineKeyboardMarkup:
     builder.button(text='По названию', callback_data=NftCallbackFactory(page='name'))
     builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
 
-    builder.adjust(1, 1, 1)
+    builder.adjust(1)
 
     return builder.as_markup()
 
@@ -59,6 +59,7 @@ def nft_collection_kb(nft_collection: NftCollection) -> InlineKeyboardMarkup:
             page='collection_history'
         ),
     )
+    builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
 
     builder.adjust(2, 1)
 
@@ -81,6 +82,8 @@ def nft_item_kb(nft_item: NftItem) -> InlineKeyboardMarkup:
                 f'{nft_item.address.to_str()}'
         )
     )  # getgems.io web app
+
+    builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
 
     return builder.as_markup()
 

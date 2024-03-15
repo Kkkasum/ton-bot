@@ -17,3 +17,11 @@ def menu_kb() -> InlineKeyboardMarkup:
     builder.adjust(1)
 
     return builder.as_markup()
+
+
+def return_menu_kb() -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
+
+    return builder.as_markup()

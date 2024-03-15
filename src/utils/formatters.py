@@ -2,6 +2,12 @@ from src.jetton import Token, DEXPools
 from src.nft import NftCollection, NftItem
 
 
+def format_connection(url: str) -> str:
+    connection_msg = f'Воспользуйся <a href="{url}">этой ссылкой</a> для подключения или QR-кодом сверху'
+
+    return connection_msg
+
+
 def format_jetton_info(jetton: Token) -> str:
     jetton_info_msg = f'Название: <b>{jetton.name}</b> (<b>{jetton.symbol}</b>)\n'\
                       f'Адрес контракта: <code>{jetton.address.to_str()}</code>\n\n'\

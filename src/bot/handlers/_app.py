@@ -10,7 +10,7 @@ router = Router()
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'app'))
-async def app(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
+async def app_menu(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
     await callback.message.answer(text=msg.app, reply_markup=app_kb())
 
 
@@ -22,7 +22,7 @@ async def app_callback(callback: types.CallbackQuery, callback_data: AppCallback
     if callback_data.page == 'defi':
         pass
 
-    if callback_data.page == 'nft':
+    if callback_data.page == 'nfts':
         pass
 
     if callback_data.page == 'gamefi':

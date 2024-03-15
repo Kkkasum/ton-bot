@@ -18,8 +18,8 @@ def app_kb() -> InlineKeyboardMarkup:
         callback_data=AppCallbackFactory(page='defi')
     )
     builder.button(
-        text='NFT',
-        callback_data=AppCallbackFactory(page='nft')
+        text='NFTs',
+        callback_data=AppCallbackFactory(page='nfts')
     )
     builder.button(
         text='GameFi',
@@ -30,10 +30,6 @@ def app_kb() -> InlineKeyboardMarkup:
         callback_data=AppCallbackFactory(page='utility')
     )
 
-    return builder.as_markup()
-
-
-def wallets_kb() -> InlineKeyboardMarkup:
-    builder = InlineKeyboardBuilder()
+    builder.adjust(1)
 
     return builder.as_markup()

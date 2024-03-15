@@ -8,6 +8,9 @@ class Config(BaseSettings):
 
     TON_API_KEY: str
 
+    MANIFEST_URL: str
+    WALLETS_LIST_URL: str
+
     REDIS_HOST: str
     REDIS_PORT: int
 

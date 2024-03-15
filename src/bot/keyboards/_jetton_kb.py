@@ -22,7 +22,7 @@ def jetton_kb() -> InlineKeyboardMarkup:
     builder.button(text='По названию', callback_data=JettonCallbackFactory(page='name'))
     builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
 
-    builder.adjust(1, 1, 1)
+    builder.adjust(1)
 
     return builder.as_markup()
 
@@ -51,6 +51,7 @@ def jetton_info_kb(jetton_addr: Address) -> InlineKeyboardMarkup:
         web_app=WebAppInfo(url=f'https://tonviewer.com/{jetton_addr.to_str()}')
     )
     builder.button(text='Посмотреть доступные пулы', callback_data=JettonCallbackFactory(page='dexes'))
+    builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
 
     builder.adjust(2, 2, 1)
 
