@@ -8,7 +8,7 @@ from pytoniq_core import Address, AddressError
 
 import qrcode
 
-from src.bot.keyboards import wallets_kb, return_menu_kb, MenuCallbackFactory, WalletCallbackFactory
+from src.bot.keyboards import wallets_kb, wallet_try_again_kb, menu_kb, MenuCallbackFactory, WalletCallbackFactory
 from src.ton import get_connector
 from src.utils import messages as msg
 from src.utils.formatters import format_connection
@@ -34,7 +34,7 @@ async def wallet_menu(callback: types.CallbackQuery, callback_data: MenuCallback
             for wallet in wallets_list
         ]
 
-    await callback.message.answer(text=msg.wallet, reply_markup=wallets_kb(wallets))
+    await callback.message.edit_text(text=msg.wallet, reply_markup=wallets_kb(wallets))
 
 
 @router.callback_query(WalletCallbackFactory.filter())
@@ -54,10 +54,11 @@ async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCa
     qr = types.FSInputFile(f'images/{callback.from_user.id}.png')
     m = format_connection(url)
 
-    await callback.message.answer_photo(photo=qr, caption=m)
+    await callback.message.delete()
+    connect_msg = await callback.message.answer_photo(photo=qr, caption=m)
 
     address = None
-    for i in range(5):
+    for i in range(120):
         await asyncio.sleep(1)
         if connector.connected:
             try:
@@ -65,5 +66,11 @@ async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCa
             except AddressError:
                 break
 
+    await connect_msg.delete()
+
     if not address:
-        await callback.message.edit_text(text=msg.wallet_connection_expired, reply_markup=return_menu_kb())
+        await callback.message.answer(text=msg.wallet_conn_expired, reply_markup=wallet_try_again_kb())
+        return
+
+    await callback.message.answer(text=msg.wallet_conn_succeed)
+    await callback.message.answer(text=msg.menu, reply_markup=menu_kb())
