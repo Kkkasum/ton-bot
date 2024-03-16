@@ -8,7 +8,7 @@ class WalletCallbackFactory(CallbackData, prefix='wallets'):
     index: int
 
 
-class WalletConnectionCallbackFactory(CallbackData, prefix='wallet'):
+class WalletActionCallbackFactory(CallbackData, prefix='wallet_actions'):
     action: str
 
 
@@ -37,17 +37,9 @@ def wallet_try_again_kb() -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def wallet_connect_kb() -> InlineKeyboardMarkup:
+def wallet_actions_kb() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
-    builder.button(text='Привязать кошелек', callback_data=WalletConnectionCallbackFactory(action='connect'))
-
-    return builder.as_markup()
-
-
-def wallet_connected_kb() -> InlineKeyboardMarkup:
-    builder = InlineKeyboardBuilder()
-
-    builder.button(text='Отвязать кошелек', callback_data=WalletConnectionCallbackFactory(action='disconnect'))
+    builder.button(text='Отключить кошелек', callback_data=WalletActionCallbackFactory(action='disconnect'))
 
     return builder.as_markup()

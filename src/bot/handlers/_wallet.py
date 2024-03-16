@@ -8,10 +8,18 @@ from pytoniq_core import Address, AddressError
 
 import qrcode
 
-from src.bot.keyboards import wallets_kb, wallet_try_again_kb, menu_kb, MenuCallbackFactory, WalletCallbackFactory
 from src.ton import get_connector
 from src.utils import messages as msg
 from src.utils.formatters import format_connection
+from src.bot.keyboards import (
+    wallets_kb,
+    wallet_try_again_kb,
+    wallet_actions_kb,
+    return_menu_kb,
+    MenuCallbackFactory,
+    WalletCallbackFactory,
+    WalletActionCallbackFactory
+)
 
 
 router = Router()
@@ -73,4 +81,13 @@ async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCa
         return
 
     await callback.message.answer(text=msg.wallet_conn_succeed)
-    await callback.message.answer(text=msg.menu, reply_markup=menu_kb())
+    await callback.message.answer(text=msg.menu, reply_markup=wallet_actions_kb())
+
+
+@router.callback_query(WalletActionCallbackFactory.filter(F.action == 'disconnect'))
+async def wallet_action_callback(callback: types.CallbackQuery, callback_data: WalletActionCallbackFactory):
+    connector = get_connector(callback.from_user.id)
+    await connector.restore_connection()
+    await connector.disconnect()
+
+    await callback.message.edit_text(text=msg.wallet_disconnect, reply_markup=return_menu_kb())
