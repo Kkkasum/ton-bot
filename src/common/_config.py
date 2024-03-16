@@ -7,6 +7,7 @@ class Config(BaseSettings):
     BOT_TOKEN: str
 
     TON_API_KEY: str
+    GITHUB_API_KEY: str
 
     MANIFEST_URL: str
     WALLETS_LIST_URL: str

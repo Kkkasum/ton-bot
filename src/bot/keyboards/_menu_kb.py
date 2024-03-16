@@ -13,6 +13,7 @@ def menu_kb() -> InlineKeyboardMarkup:
     builder.button(text='💎 Jetton', callback_data=MenuCallbackFactory(page='jetton'))
     builder.button(text='🖼 NFT', callback_data=MenuCallbackFactory(page='nft'))
     builder.button(text='📱 Приложения TON', callback_data=MenuCallbackFactory(page='app'))
+    builder.button(text='Контракты', callback_data=MenuCallbackFactory(page='contract'))
 
     builder.adjust(1)
 

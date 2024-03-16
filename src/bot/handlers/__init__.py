@@ -5,6 +5,7 @@ from ._wallet import router as wallet_router
 from ._jetton import router as jetton_router
 from ._nft import router as nft_router
 from ._app import router as app_router
+from ._contract import router as contract_router
 
 
 def include_routers(dp: Dispatcher):
@@ -13,5 +14,6 @@ def include_routers(dp: Dispatcher):
         wallet_router,
         jetton_router,
         nft_router,
-        app_router
+        app_router,
+        contract_router
     )
