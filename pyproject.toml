@@ -16,6 +16,7 @@ gql = "^3.5.0"
 redis = "^5.0.2"
 pytonconnect = "^0.3.0"
 qrcode = "^7.4.2"
+aiogram-dialog = "^2.1.0"
 
 [build-system]
 requires = ["poetry-core"]

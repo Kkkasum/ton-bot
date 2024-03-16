@@ -40,6 +40,9 @@ def wallet_try_again_kb() -> InlineKeyboardMarkup:
 def wallet_actions_kb() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
+    builder.button(text='Сделать перевод', callback_data=WalletActionCallbackFactory(action='transfer'))
     builder.button(text='Отключить кошелек', callback_data=WalletActionCallbackFactory(action='disconnect'))
+
+    builder.adjust(1)
 
     return builder.as_markup()

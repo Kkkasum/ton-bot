@@ -1,6 +1,9 @@
 import asyncio
+from typing import Any
 
 from aiogram import Router, F, types
+
+from aiogram_dialog import DialogManager, StartMode
 
 from pytonconnect.exceptions import FetchWalletsError
 
@@ -11,6 +14,7 @@ import qrcode
 from src.ton import get_connector
 from src.utils import messages as msg
 from src.utils.formatters import format_connection
+from src.bot.dialogs import include_dialog, TransferStates
 from src.bot.keyboards import (
     wallets_kb,
     wallet_try_again_kb,
@@ -23,11 +27,18 @@ from src.bot.keyboards import (
 
 
 router = Router()
+include_dialog(router)
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'wallet'))
 async def wallet_menu(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
     connector = get_connector(callback.from_user.id)
+
+    is_connected = await connector.restore_connection()
+    if is_connected:
+        await callback.message.answer(text=msg.wallet_connected)
+        await callback.message.answer(text=msg.menu, reply_markup=wallet_actions_kb())
+        return
 
     try:
         wallets = [
@@ -73,6 +84,8 @@ async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCa
                 address = Address(connector.account.address)
             except AddressError:
                 break
+            else:
+                break
 
     await connect_msg.delete()
 
@@ -84,8 +97,13 @@ async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCa
     await callback.message.answer(text=msg.menu, reply_markup=wallet_actions_kb())
 
 
+@router.callback_query(WalletActionCallbackFactory.filter(F.action == 'transfer'))
+async def wallet_transfer(kwargs: dict[str, Any], dialog_manager: DialogManager):
+    await dialog_manager.start(TransferStates.address, mode=StartMode.RESET_STACK)
+
+
 @router.callback_query(WalletActionCallbackFactory.filter(F.action == 'disconnect'))
-async def wallet_action_callback(callback: types.CallbackQuery, callback_data: WalletActionCallbackFactory):
+async def wallet_disconnect(callback: types.CallbackQuery, callback_data: WalletActionCallbackFactory):
     connector = get_connector(callback.from_user.id)
     await connector.restore_connection()
     await connector.disconnect()
