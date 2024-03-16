@@ -14,5 +14,5 @@ async def menu(message: types.Message):
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'menu'))
-async def menu_callback(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
+async def menu_callback(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text=msg.menu, reply_markup=menu_kb())

@@ -88,7 +88,7 @@ def nft_item_kb(nft_item: NftItem) -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def nft_collection_history() -> InlineKeyboardMarkup:
+def nft_collection_history_kb() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     builder.button(

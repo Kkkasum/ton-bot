@@ -1,5 +1,4 @@
 import asyncio
-from typing import Any
 
 from aiogram import Router, F, types
 
@@ -31,7 +30,7 @@ include_dialog(router)
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'wallet'))
-async def wallet_menu(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
+async def wallet_menu(callback: types.CallbackQuery, **_):
     connector = get_connector(callback.from_user.id)
 
     is_connected = await connector.restore_connection()
@@ -98,12 +97,12 @@ async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCa
 
 
 @router.callback_query(WalletActionCallbackFactory.filter(F.action == 'transfer'))
-async def wallet_transfer(kwargs: dict[str, Any], dialog_manager: DialogManager):
+async def wallet_transfer(_, dialog_manager: DialogManager):
     await dialog_manager.start(TransferStates.address, mode=StartMode.RESET_STACK)
 
 
 @router.callback_query(WalletActionCallbackFactory.filter(F.action == 'disconnect'))
-async def wallet_disconnect(callback: types.CallbackQuery, callback_data: WalletActionCallbackFactory):
+async def wallet_disconnect(callback: types.CallbackQuery, **_):
     connector = get_connector(callback.from_user.id)
     await connector.restore_connection()
     await connector.disconnect()

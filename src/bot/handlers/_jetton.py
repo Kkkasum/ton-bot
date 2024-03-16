@@ -25,7 +25,7 @@ router.callback_query.middleware(AntifloodMiddleware())
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'jetton'))
-async def jetton_menu(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
+async def jetton_menu(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text=msg.jetton, reply_markup=jetton_kb())
 
 

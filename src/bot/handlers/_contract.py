@@ -18,12 +18,12 @@ router = Router()
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'contract'))
-async def contract_menu(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
+async def contract_menu(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text=msg.contract, reply_markup=contract_kb())
 
 
 @router.callback_query(ContractCallbackFactory.filter(F.page == 'templates'))
-async def contract_category_callback(callback: types.CallbackQuery, callback_data: ContractCallbackFactory):
+async def contract_callback(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text=msg.contract_category, reply_markup=contract_templates_kb())
 
 
@@ -37,30 +37,30 @@ async def category_callback(callback: types.CallbackQuery, callback_data: Catego
 
 
 @router.callback_query(StandardContractCallbackFactory.filter(F.page == 'jetton-minter'))
-async def template_jetton_minter_callback(callback: types.CallbackQuery, **kwargs):
+async def template_jetton_minter_callback(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text='jetton-minter')
 
 
 @router.callback_query(StandardContractCallbackFactory.filter(F.page == 'jetton-wallet'))
-async def template_jetton_minter_callback(callback: types.CallbackQuery, **kwargs):
+async def template_jetton_minter_callback(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text='jetton-minter')
 
 
 @router.callback_query(StandardContractCallbackFactory.filter(F.page == 'nft-collection'))
-async def template_jetton_minter_callback(callback: types.CallbackQuery, **kwargs):
+async def template_jetton_minter_callback(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text='jetton-minter')
 
 
 @router.callback_query(StandardContractCallbackFactory.filter(F.page == 'nft-item'))
-async def template_jetton_minter_callback(callback: types.CallbackQuery, **kwargs):
+async def template_jetton_minter_callback(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text='jetton-minter')
 
 
 @router.callback_query(StandardContractCallbackFactory.filter(F.page == 'nft-marketplace'))
-async def template_jetton_minter_callback(callback: types.CallbackQuery, **kwargs):
+async def template_jetton_minter_callback(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text='jetton-minter')
 
 
 @router.callback_query(StandardContractCallbackFactory.filter(F.page == 'nft-sale'))
-async def template_jetton_minter_callback(callback: types.CallbackQuery, **kwargs):
+async def template_jetton_minter_callback(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text='jetton-minter')

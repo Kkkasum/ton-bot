@@ -15,7 +15,7 @@ from src.bot.keyboards import (
     nft_search_kb,
     nft_collection_kb,
     nft_item_kb,
-    nft_collection_history,
+    nft_collection_history_kb,
     MenuCallbackFactory,
     NftCallbackFactory,
     NftCollectionHistoryCallbackFactory
@@ -27,7 +27,7 @@ router.callback_query.middleware(AntifloodMiddleware())
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'nft'))
-async def nft_menu(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
+async def nft_menu(callback: types.CallbackQuery, **_):
     await callback.message.edit_text(text=msg.nft, reply_markup=nft_kb())
 
 
@@ -48,7 +48,7 @@ async def nft_callback(callback: types.CallbackQuery, callback_data: NftCallback
         await state.set_state('search_nft')
 
     if callback_data.page == 'collection_history':
-        await callback.message.answer(text=msg.nft_collection_history, reply_markup=nft_collection_history())
+        await callback.message.answer(text=msg.nft_collection_history, reply_markup=nft_collection_history_kb())
 
 
 @router.message(StateFilter('search_collection'))

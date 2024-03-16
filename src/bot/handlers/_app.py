@@ -10,7 +10,7 @@ router = Router()
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'app'))
-async def app_menu(callback: types.CallbackQuery, callback_data: MenuCallbackFactory):
+async def app_menu(callback: types.CallbackQuery, **_):
     await callback.message.answer(text=msg.app, reply_markup=app_kb())
 
 
