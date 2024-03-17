@@ -31,6 +31,8 @@ include_dialog(router)
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'wallet'))
 async def wallet_menu(callback: types.CallbackQuery, **_):
+    await callback.message.delete()
+
     connector = get_connector(callback.from_user.id)
 
     is_connected = await connector.restore_connection()
@@ -52,7 +54,7 @@ async def wallet_menu(callback: types.CallbackQuery, **_):
             for wallet in wallets_list
         ]
 
-    await callback.message.edit_text(text=msg.wallet, reply_markup=wallets_kb(wallets))
+    await callback.message.answer(text=msg.wallet, reply_markup=wallets_kb(wallets))
 
 
 @router.callback_query(WalletCallbackFactory.filter())

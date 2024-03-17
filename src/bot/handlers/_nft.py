@@ -28,7 +28,8 @@ router.callback_query.middleware(AntifloodMiddleware())
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'nft'))
 async def nft_menu(callback: types.CallbackQuery, **_):
-    await callback.message.edit_text(text=msg.nft, reply_markup=nft_kb())
+    await callback.message.delete()
+    await callback.message.answer(text=msg.nft, reply_markup=nft_kb())
 
 
 @router.callback_query(NftCallbackFactory.filter())
@@ -67,7 +68,7 @@ async def search_collection(message: types.Message, state: FSMContext):
 
         await r.set(name=message.from_user.id, value=collection_addr.to_str(is_user_friendly=False))
         await state.clear()
-    except AddressError:
+    except (AddressError, ValueError):
         await message.answer(text=msg.nft_contract_error)
         await message.answer(text=msg.nft_search_collection)
 
@@ -87,7 +88,7 @@ async def search_nft(message: types.Message, state: FSMContext):
             await message.answer(text=m, reply_markup=nft_item_kb(nft_item))
 
         await state.clear()
-    except AddressError:
+    except (AddressError, ValueError):
         await message.answer(text=msg.nft_contract_error)
         await message.answer(text=msg.nft_search_collection)
 

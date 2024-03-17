@@ -1,1 +1,1 @@
-from ._connector import get_connector
+from ._connector import get_connector, ton_transfer

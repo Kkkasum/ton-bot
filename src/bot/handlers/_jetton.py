@@ -26,7 +26,8 @@ router.callback_query.middleware(AntifloodMiddleware())
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'jetton'))
 async def jetton_menu(callback: types.CallbackQuery, **_):
-    await callback.message.edit_text(text=msg.jetton, reply_markup=jetton_kb())
+    await callback.message.delete()
+    await callback.message.answer(text=msg.jetton, reply_markup=jetton_kb())
 
 
 @router.callback_query(JettonCallbackFactory.filter())
@@ -61,7 +62,7 @@ async def jetton_contract(message: types.Message, state: FSMContext):
 
         await r.set(name=message.from_user.id, value=jetton_addr.to_str(is_user_friendly=False))
         await state.clear()
-    except AddressError:
+    except (AddressError, ValueError):
         await message.answer(text=msg.jetton_contract_error)
         await message.answer(text=msg.jetton_contract)
 

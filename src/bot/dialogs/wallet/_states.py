@@ -3,5 +3,7 @@ from aiogram.fsm.state import StatesGroup, State
 
 class TransferStates(StatesGroup):
     address = State()
-    toncoin_amount = State()
+    token = State()
+    jetton = State()
+    token_amount = State()
     finish = State()

@@ -1,6 +1,9 @@
 # Middleware
 antiflood = 'Не нажимайте слишком часто!'
 
+# Error
+error = 'Произошла какая-то ошибка'
+
 # Main
 menu = 'Выберите действие:'
 
@@ -13,9 +16,7 @@ wallet_conn_succeed = 'Вы успешно подключили кошелек!'
 
 wallet_connected = 'Ваш кошелек уже подключен!'
 
-wallet_transfer_address = 'Введите адрес кошелька'
-
-wallet_transfer_toncoin_amount = 'Введите количество TON'
+wallet_not_connected = 'Ваш кошелек не подключен!'
 
 wallet_address_error = 'Вы ввели неправильный адрес кошелька'
 
@@ -24,13 +25,23 @@ wallet_toncoin_amount_error = 'Количество TON должно быть ч
 wallet_disconnect = 'Вы успешно отключили кошелек!'
 
 # Wallet Dialog
+wallet_dialog_address_input = 'Введите адрес кошелька получателя'
+
+wallet_dialog_token = 'Выберите токен:'
+
+wallet_dialog_jetton = 'Выберите жеттон:'
+
+wallet_dialog_token_amount_input = 'Введите количество <b>{token}</b>'
+
 wallet_dialog_address = 'Адрес: <b>{address}</b>'
 
-wallet_dialog_toncoin_amount = 'Количество TON: 💎<b>{toncoin_amount}</b>'
+wallet_dialog_token_amount = 'Количество <b>{token}</b>: <b>{token_amount}</b>'
 
 wallet_dialog_cancel_transfer = '❌ Отменить транзакцию'
 
 wallet_dialog_confirm_transfer = '✅ Подтвердить транзакцию'
+
+wallet_dialog_rejected_transfer = 'Вы отменили транзакцию!'
 
 # Jetton
 jetton = 'Получить информацию о жеттоне можно следующими способами:'

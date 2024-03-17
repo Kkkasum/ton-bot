@@ -42,6 +42,7 @@ def wallet_actions_kb() -> InlineKeyboardMarkup:
 
     builder.button(text='Сделать перевод', callback_data=WalletActionCallbackFactory(action='transfer'))
     builder.button(text='Отключить кошелек', callback_data=WalletActionCallbackFactory(action='disconnect'))
+    builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
 
     builder.adjust(1)
 

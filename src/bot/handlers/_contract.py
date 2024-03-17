@@ -19,7 +19,8 @@ router = Router()
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'contract'))
 async def contract_menu(callback: types.CallbackQuery, **_):
-    await callback.message.edit_text(text=msg.contract, reply_markup=contract_kb())
+    await callback.message.delete()
+    await callback.message.answer(text=msg.contract, reply_markup=contract_kb())
 
 
 @router.callback_query(ContractCallbackFactory.filter(F.page == 'templates'))
