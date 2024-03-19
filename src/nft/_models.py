@@ -42,7 +42,7 @@ class Collection(BaseModel):
 
 class NftItem(BaseModel):
     name: str
-    collection: Collection
+    collection: Collection | None
     address: Address
     owner: Address | None
     img: str

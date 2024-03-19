@@ -13,6 +13,7 @@ from ._states import TransferStates
 from src.utils import messages as msg
 from src.bot.keyboards import wallet_actions_kb, return_menu_kb
 from src.ton import Connector, TONTransferTransaction, JettonTransferTransaction, NFTTransferTransaction, Provider
+from src.accounts import accounts_tonapi
 
 
 router = Router()
