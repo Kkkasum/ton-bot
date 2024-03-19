@@ -30,7 +30,7 @@ class CollectionStats(BaseModel):
 
     @property
     def volume(self) -> float:
-        return self.total_volume / 10 ** 9
+        return self.total_volume / 1e9
 
 
 class Collection(BaseModel):

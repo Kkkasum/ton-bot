@@ -17,7 +17,7 @@ class Token(BaseModel):
 
     @property
     def supply(self) -> float:
-        return self.total_supply / 10 ** 9
+        return self.total_supply / 1e9
 
 
 # class Tokens(BaseModel):

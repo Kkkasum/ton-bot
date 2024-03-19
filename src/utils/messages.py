@@ -20,7 +20,7 @@ wallet_not_connected = 'Ваш кошелек не подключен!'
 
 wallet_address_error = 'Вы ввели неправильный адрес кошелька'
 
-wallet_toncoin_amount_error = 'Количество TON должно быть числом'
+wallet_amount_error = 'Количество должно быть числом'
 
 wallet_disconnect = 'Вы успешно отключили кошелек!'
 
@@ -31,15 +31,21 @@ wallet_dialog_token = 'Выберите токен:'
 
 wallet_dialog_jetton = 'Выберите жеттон:'
 
-wallet_dialog_token_amount_input = 'Введите количество <b>{token}</b>'
+wallet_dialog_amount_input = 'Введите количество <b>{token}</b>'
+
+wallet_dialog_comment_input = 'Введите комментарий для транзакции'
 
 wallet_dialog_address = 'Адрес: <b>{address}</b>'
 
-wallet_dialog_token_amount = 'Количество <b>{token}</b>: <b>{token_amount}</b>'
+wallet_dialog_amount = 'Количество <b>{token}</b>: <b>{amount}</b>'
+
+wallet_dialog_comment = 'Комментарий: <b>{comment}</b>'
 
 wallet_dialog_cancel_transfer = '❌ Отменить транзакцию'
 
 wallet_dialog_confirm_transfer = '✅ Подтвердить транзакцию'
+
+wallet_dialog_approve_transfer = 'Подтвердите транзакцию в своем кошельке'
 
 wallet_dialog_rejected_transfer = 'Вы отменили транзакцию!'
 

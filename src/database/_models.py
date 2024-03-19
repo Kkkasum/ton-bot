@@ -12,3 +12,8 @@
 # github code url
 # contract standard
 # ton docs
+
+
+# Jetton
+# name
+# jetton_master_address

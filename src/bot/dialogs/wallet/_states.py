@@ -5,5 +5,6 @@ class TransferStates(StatesGroup):
     address = State()
     token = State()
     jetton = State()
-    token_amount = State()
+    amount = State()
+    comment = State()
     finish = State()

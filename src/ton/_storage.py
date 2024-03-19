@@ -5,11 +5,11 @@ from src.common import r
 
 class TcStorage(IStorage):
 
-    def __init__(self, chat_id: int):
-        self.chat_id = chat_id
+    def __init__(self, user_id: int):
+        self.user_id = f'{user_id}_tonconnect'
 
     def _get_key(self, key: str):
-        return str(self.chat_id) + key
+        return str(self.user_id) + key
 
     async def set_item(self, key: str, value: str):
         await r.set(name=self._get_key(key), value=value)

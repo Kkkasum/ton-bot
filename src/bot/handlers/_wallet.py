@@ -10,7 +10,7 @@ from pytoniq_core import Address, AddressError
 
 import qrcode
 
-from src.ton import get_connector
+from src.ton import Connector
 from src.utils import messages as msg
 from src.utils.formatters import format_connection
 from src.bot.dialogs import include_dialog, TransferStates
@@ -33,7 +33,7 @@ include_dialog(router)
 async def wallet_menu(callback: types.CallbackQuery, **_):
     await callback.message.delete()
 
-    connector = get_connector(callback.from_user.id)
+    connector = Connector(callback.from_user.id)
 
     is_connected = await connector.restore_connection()
     if is_connected:
@@ -59,7 +59,7 @@ async def wallet_menu(callback: types.CallbackQuery, **_):
 
 @router.callback_query(WalletCallbackFactory.filter())
 async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCallbackFactory):
-    connector = get_connector(callback.from_user.id)
+    connector = Connector(callback.from_user.id)
 
     while True:
         try:
@@ -105,7 +105,7 @@ async def wallet_transfer(_, dialog_manager: DialogManager):
 
 @router.callback_query(WalletActionCallbackFactory.filter(F.action == 'disconnect'))
 async def wallet_disconnect(callback: types.CallbackQuery, **_):
-    connector = get_connector(callback.from_user.id)
+    connector = Connector(callback.from_user.id)
     await connector.restore_connection()
     await connector.disconnect()
 
