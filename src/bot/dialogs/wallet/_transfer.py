@@ -12,7 +12,7 @@ from pytonconnect.exceptions import UserRejectsError, WalletNotConnectedError
 from ._states import TransferStates
 from src.utils import messages as msg
 from src.bot.keyboards import wallet_actions_kb, return_menu_kb
-from src.ton import Connector, TONTransferTransaction, JettonTransferTransaction, Provider
+from src.ton import Connector, TONTransferTransaction, JettonTransferTransaction, NFTTransferTransaction, Provider
 
 
 router = Router()
@@ -27,7 +27,7 @@ async def get_data(dialog_manager: DialogManager, **_):
     }
 
 
-async def address_handler(message: types.Message, message_input: MessageInput, dm: DialogManager, **kwargs):
+async def address_handler(message: types.Message, message_input: MessageInput, dm: DialogManager):
     try:
         address = Address(message.text)
     except (AddressError, ValueError):
@@ -41,6 +41,18 @@ async def address_handler(message: types.Message, message_input: MessageInput, d
     dm.dialog_data['address'] = address.to_str(is_user_friendly=True)
 
     await dm.next()
+
+
+async def nft_handler(message: types.Message, message_input: MessageInput, dm: DialogManager):
+    try:
+        Address(message.text)
+    except AddressError:
+        await message.answer(text=msg.nft_contract_error, reply_markup=return_menu_kb())
+        await dm.done()
+
+    dm.dialog_data['nft_address'] = message.text
+
+    await dm.switch_to(state=TransferStates.comment)
 
 
 async def token_handler(callback: types.CallbackQuery, button: Button, dm: DialogManager):
@@ -89,7 +101,12 @@ async def confirm_transaction_handler(callback: types.CallbackQuery, button: But
     if comment == 'нет':
         comment = ''
 
-    if dm.dialog_data['token'] == 'TON':
+    if dm.dialog_data['nft_address']:
+        transfer_transaction = NFTTransferTransaction(
+            nft_address=dm.dialog_data['nft_address'],
+            recipient_address=dm.dialog_data['address'],
+        )
+    elif dm.dialog_data['token'] == 'TON':
         transfer_transaction = TONTransferTransaction(
             address=dm.dialog_data['address'],
             amount=dm.dialog_data['amount'],
@@ -131,7 +148,8 @@ dialog = Dialog(
         Const(msg.wallet_dialog_token),
         Row(
             Button(Const('TON'), id='ton', on_click=token_handler),
-            SwitchTo(Const('Jetton'), id='jetton', state=TransferStates.jetton)
+            SwitchTo(Const('Jetton'), id='jetton', state=TransferStates.jetton),
+            SwitchTo(Const('NFT'), id='nft', state=TransferStates.nft)
         ),
         state=TransferStates.token
     ),
@@ -142,6 +160,11 @@ dialog = Dialog(
             Button(Const('TONNEL'), id='tonnel', on_click=token_handler)
         ),
         state=TransferStates.jetton
+    ),
+    Window(
+        Const(msg.wallet_dialog_nft_address_input),
+        MessageInput(nft_handler, content_types=[types.ContentType.TEXT]),
+        state=TransferStates.nft
     ),
     Window(
         Format(msg.wallet_dialog_amount_input),

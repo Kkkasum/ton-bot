@@ -31,6 +31,8 @@ wallet_dialog_token = 'Выберите токен:'
 
 wallet_dialog_jetton = 'Выберите жеттон:'
 
+wallet_dialog_nft_address_input = 'Введите адрес NFT'
+
 wallet_dialog_amount_input = 'Введите количество <b>{token}</b>'
 
 wallet_dialog_comment_input = 'Введите комментарий для транзакции'
