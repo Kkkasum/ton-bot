@@ -36,10 +36,7 @@ class Nft(TonAPI):
             account_id=nft_addr.to_str(is_user_friendly=False)
         )
 
-        if not nft_item.owner:
-            owner = None
-        else:
-            owner = Address(nft_item.owner.address.to_raw())
+        owner = Address(nft_item.owner.address.to_raw()) if nft_item.owner else None
 
         return NftItem(
             name=nft_item.metadata['name'],

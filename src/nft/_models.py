@@ -42,9 +42,9 @@ class Collection(BaseModel):
 
 class NftItem(BaseModel):
     name: str
-    collection: Collection | None
+    collection: Collection | None = None
     address: Address
-    owner: Address | None
+    owner: Address | None = None
     img: str
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -56,10 +56,8 @@ class NftItem(BaseModel):
         return self.name
 
     @property
-    def owner_address(self) -> str:
-        if not self.owner:
-            return 'отсутствует'
-        return self.owner.to_str(is_user_friendly=True)
+    def owner_address(self) -> str | None:
+        return self.owner.to_str() if self.owner else None
 
 
 class NftCollection(BaseModel):
@@ -74,7 +72,5 @@ class NftCollection(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @property
-    def socials(self) -> str:
-        if not self.social_links:
-            return 'отсутствуют'
-        return '\n' + '\n'.join(self.social_links)
+    def socials(self) -> str | None:
+        return '\n' + '\n'.join(self.social_links) if self.social_links else None

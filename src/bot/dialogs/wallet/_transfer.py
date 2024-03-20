@@ -11,7 +11,8 @@ from pytonconnect.exceptions import UserRejectsError, WalletNotConnectedError
 
 from ._states import TransferStates
 from src.utils import messages as msg
-from src.bot.keyboards import wallet_actions_kb, return_menu_kb
+from src.utils.formatters import format_dialog_nft_item
+from src.bot.keyboards import wallet_actions_kb, return_menu_kb, available_nft_items_kb
 from src.ton import Connector, TONTransferTransaction, JettonTransferTransaction, NFTTransferTransaction, Provider
 from src.accounts import accounts_tonapi
 
@@ -44,24 +45,12 @@ async def address_handler(message: types.Message, message_input: MessageInput, d
     await dm.next()
 
 
-async def nft_handler(message: types.Message, message_input: MessageInput, dm: DialogManager):
-    try:
-        Address(message.text)
-    except AddressError:
-        await message.answer(text=msg.nft_contract_error, reply_markup=return_menu_kb())
-        await dm.done()
-
-    dm.dialog_data['nft_address'] = message.text
-
-    await dm.switch_to(state=TransferStates.comment)
-
-
 async def token_handler(callback: types.CallbackQuery, button: Button, dm: DialogManager):
     await callback.message.delete()
 
     dm.dialog_data['token'] = button.text.text
 
-    await dm.switch_to(state=TransferStates.amount)
+    await dm.next()
 
 
 async def amount_handler(message: types.Message, message_input: MessageInput, dm: DialogManager):
@@ -73,6 +62,39 @@ async def amount_handler(message: types.Message, message_input: MessageInput, dm
         return
 
     dm.dialog_data['amount'] = amount
+
+    await dm.switch_to(state=TransferStates.comment)
+
+
+async def nft_address_handler(message: types.Message, message_input: MessageInput, dm: DialogManager):
+    try:
+        Address(message.text)
+    except AddressError:
+        await message.answer(text=msg.nft_contract_error, reply_markup=return_menu_kb())
+        await dm.done()
+
+    dm.dialog_data['nft_address'] = message.text
+
+    await dm.next()
+
+
+async def available_nft_items_handler(callback: types.CallbackQuery, button: Button, dm: DialogManager):
+    connector = Connector(callback.from_user.id)
+    await connector.restore_connection()
+
+    nft_items = await accounts_tonapi.get_all_nft_items(wallet_address=connector.account.address)
+
+    await callback.message.delete()
+    await callback.message.answer(text=msg.wallet_dialog_nft_item_input, reply_markup=available_nft_items_kb(nft_items))
+
+    await dm.switch_to(state=TransferStates.comment)
+
+
+@router.callback_query(lambda c: c == 'available_nft_item')
+async def nft_item_handler(callback: types.CallbackQuery, button: Button, dm: DialogManager):
+    # Для обработки отдельных NFT
+    # Сюда получится зайти, через aiogram dialog
+    await callback.message.answer(text='asd')
 
     await dm.next()
 
@@ -163,15 +185,25 @@ dialog = Dialog(
         state=TransferStates.jetton
     ),
     Window(
-        Const(msg.wallet_dialog_nft_address_input),
-        MessageInput(nft_handler, content_types=[types.ContentType.TEXT]),
-        state=TransferStates.nft
-    ),
-    Window(
         Format(msg.wallet_dialog_amount_input),
         MessageInput(amount_handler, content_types=[types.ContentType.TEXT]),
         getter=get_data,
         state=TransferStates.amount
+    ),
+    Window(
+        Const(msg.wallet_dialog_nft_input),
+        SwitchTo(Const('По адресу NFT'), id='nft_address', state=TransferStates.nft_address),
+        Button(Const('Выбрать из доступных'), id='available_nft_items', on_click=available_nft_items_handler),
+        state=TransferStates.nft
+    ),
+    Window(
+        Const(msg.wallet_dialog_nft_address_input),
+        MessageInput(nft_address_handler, content_types=[types.ContentType.TEXT]),
+        state=TransferStates.nft_address
+    ),
+    Window(
+        Button(Const('asd'), id='available_nft_item', on_click=nft_item_handler),
+        state=TransferStates.available_nft_items
     ),
     Window(
         Const(msg.wallet_dialog_comment_input),

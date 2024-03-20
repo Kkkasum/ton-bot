@@ -76,8 +76,8 @@ async def search_collection(message: types.Message, state: FSMContext):
 @router.message(StateFilter('search_nft'))
 async def search_nft(message: types.Message, state: FSMContext):
     try:
-        collection_addr = Address(message.text)
-        nft_item = await nft_tonapi.get_nft_item(collection_addr)
+        nft_addr = Address(message.text)
+        nft_item = await nft_tonapi.get_nft_item(nft_addr)
 
         m = format_nft_item(nft_item)
         img = types.URLInputFile(nft_item.img)

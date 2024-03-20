@@ -31,9 +31,13 @@ wallet_dialog_token = 'Выберите токен:'
 
 wallet_dialog_jetton = 'Выберите жеттон:'
 
+wallet_dialog_amount_input = 'Введите количество <b>{token}</b>'
+
+wallet_dialog_nft_input = 'Способы для выбора NFT, которую вы хотите отправить:'
+
 wallet_dialog_nft_address_input = 'Введите адрес NFT'
 
-wallet_dialog_amount_input = 'Введите количество <b>{token}</b>'
+wallet_dialog_nft_item_input = 'Выберите одну из доступных NFT'
 
 wallet_dialog_comment_input = 'Введите комментарий для транзакции'
 
@@ -89,3 +93,8 @@ contract_category = 'Здесь вы узнаете о базовых реали
 contract_templates_jetton = 'Выберите контракт жеттона:'
 
 contract_templates_nft = 'Выберите контракт NFT:'
+
+# Settings
+settings = '⚙️ Настройки:'
+
+lang = 'Выберите язык:'

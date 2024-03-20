@@ -1,3 +1,5 @@
+from pytoniq_core import Address
+
 from src.common import TonAPI
 from src.nft import NftItem
 
@@ -7,7 +9,7 @@ class Accounts(TonAPI):
         super().__init__()
         self.accounts = self.tonapi.accounts
 
-    async def get_all_nfts(self, wallet_address: str) -> list[NftItem]:
+    async def get_all_nft_items(self, wallet_address: str) -> list[NftItem]:
         nft_items = await self.accounts.get_all_nfts(
             account_id=wallet_address
         )
@@ -15,10 +17,10 @@ class Accounts(TonAPI):
         return [
             NftItem(
                 name=nft_item.metadata['name'],
-                address=nft_item,
+                address=Address(nft_item.address.to_raw()),
                 img=nft_item.metadata['image']
             )
-            for nft_item in nft_items
+            for nft_item in nft_items.nft_items
         ]
 
 

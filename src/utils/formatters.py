@@ -38,7 +38,7 @@ def format_nft_collection(nft_collection: NftCollection) -> str:
                          f'Цена флора: 💎<b>{nft_collection.stats.floor_price}</b>\n'\
                          f'Объем торгов: 💎<b>{nft_collection.stats.volume:.2f}</b>\n\n'\
                          f'Ссылки: '\
-                         f'{nft_collection.socials}'
+                         f'{"отсутствуют" if not nft_collection.socials else nft_collection.socials}'
 
     return nft_collection_msg
 
@@ -47,6 +47,12 @@ def format_nft_item(nft_item: NftItem) -> str:
     nft_item_msg = f'Название: <b>{nft_item.name}</b>\n'\
                    f'Коллекция: <b>{nft_item.collection.name}</b>\n\n'\
                    f'Адрес NFT: <code>{nft_item.address.to_str()}</code>\n'\
-                   f'Адрес владельца: <code>{nft_item.owner_address}</code>'
+                   f'Адрес владельца: <code>{"отсутствует" if not nft_item.owner else nft_item.owner_address}</code>'
+
+    return nft_item_msg
+
+
+def format_dialog_nft_item(nft_item: NftItem) -> str:
+    nft_item_msg = f'Название: <b>{nft_item.name}</b>'
 
     return nft_item_msg
