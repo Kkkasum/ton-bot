@@ -18,6 +18,8 @@ pytonconnect = "^0.3.0"
 qrcode = "^7.4.2"
 aiogram-dialog = "^2.1.0"
 pytoniq = "^0.1.34"
+sqlalchemy = "^2.0.28"
+alembic = "^1.13.1"
 
 [build-system]
 requires = ["poetry-core"]

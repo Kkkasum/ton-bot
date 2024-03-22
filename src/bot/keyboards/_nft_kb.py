@@ -145,20 +145,3 @@ def nft_collection_history_kb() -> InlineKeyboardMarkup:
     builder.adjust(3, 3, 2)
 
     return builder.as_markup()
-
-
-def available_nft_items_kb(available_nft_items: list[NftItem]) -> InlineKeyboardMarkup:
-    builder = InlineKeyboardBuilder()
-
-    [
-        builder.button(
-            text=nft_item.name,
-            callback_data='available_nft_item'
-        )
-        for nft_item in available_nft_items
-    ]
-    # builder.button(text='Вернуться')
-
-    builder.adjust(1)
-
-    return builder.as_markup()

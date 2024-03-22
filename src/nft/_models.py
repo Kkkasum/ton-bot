@@ -74,3 +74,13 @@ class NftCollection(BaseModel):
     @property
     def socials(self) -> str | None:
         return '\n' + '\n'.join(self.social_links) if self.social_links else None
+
+
+class SelectedNftItem(BaseModel):
+    index: int
+    name: str
+    address: str
+    img: str
+
+    def __getitem__(self, key):
+        return list(self.__dict__.values())[key]

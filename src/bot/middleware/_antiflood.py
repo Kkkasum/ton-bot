@@ -26,5 +26,5 @@ class AntifloodMiddleware(BaseMiddleware):
         except TypeError:
             return await handler(event, data)
 
-        await event.answer(text=msg.antiflood_msg, show_alert=True)
+        await event.answer(text=msg.antiflood, show_alert=True)
         return

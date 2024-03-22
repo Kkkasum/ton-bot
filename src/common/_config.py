@@ -12,6 +12,12 @@ class Config(BaseSettings):
     MANIFEST_URL: str
     WALLETS_LIST_URL: str
 
+    PG_HOST: str
+    PG_PORT: str
+    PG_NAME: str
+    PG_USER: str
+    PG_PASS: str
+
     REDIS_HOST: str
     REDIS_PORT: int
 

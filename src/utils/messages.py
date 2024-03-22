@@ -37,11 +37,13 @@ wallet_dialog_nft_input = 'Способы для выбора NFT, котору�
 
 wallet_dialog_nft_address_input = 'Введите адрес NFT'
 
-wallet_dialog_nft_item_input = 'Выберите одну из доступных NFT'
+wallet_dialog_nft_items = 'Список доступных для перевода NFT:'
+
+wallet_dialog_nft_item = 'Выберите NFT'
 
 wallet_dialog_comment_input = 'Введите комментарий для транзакции'
 
-wallet_dialog_address = 'Адрес: <b>{address}</b>'
+wallet_dialog_address = 'Адрес получателя: <b>{address}</b>'
 
 wallet_dialog_amount = 'Количество <b>{token}</b>: <b>{amount}</b>'
 

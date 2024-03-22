@@ -8,6 +8,7 @@ class TransferStates(StatesGroup):
     amount = State()
     nft = State()
     nft_address = State()
-    available_nft_items = State()
+    nft_items = State()
     comment = State()
     finish = State()
+    nft_finish = State()

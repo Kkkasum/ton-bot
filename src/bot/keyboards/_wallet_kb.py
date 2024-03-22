@@ -47,3 +47,14 @@ def wallet_actions_kb() -> InlineKeyboardMarkup:
     builder.adjust(1)
 
     return builder.as_markup()
+
+
+def wallet_return_kb() -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(text='💰 Кошелек', callback_data=MenuCallbackFactory(page='wallet'))
+    builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
+
+    builder.adjust(1)
+
+    return builder.as_markup()
