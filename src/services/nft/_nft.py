@@ -47,4 +47,4 @@ class NftService(TonAPI):
         )
 
 
-nft_tonapi = NftService()
+nft_service = NftService()

@@ -6,7 +6,7 @@ from aiogram.exceptions import TelegramBadRequest
 from pytoniq_core import Address, AddressError
 
 from src.bot.middleware import AntifloodMiddleware
-from src.services.nft import nft_tonapi, gg
+from src.services.nft import nft_service, gg
 from src.common import r
 from src.utils import messages as msg
 from src.utils.formatters import format_nft_collection, format_nft_item
@@ -77,7 +77,7 @@ async def search_collection(message: types.Message, state: FSMContext):
 async def search_nft(message: types.Message, state: FSMContext):
     try:
         nft_addr = Address(message.text)
-        nft_item = await nft_tonapi.get_nft_item(nft_addr)
+        nft_item = await nft_service.get_nft_item(nft_addr)
 
         m = format_nft_item(nft_item)
         img = types.URLInputFile(nft_item.img)

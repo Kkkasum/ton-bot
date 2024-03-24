@@ -7,7 +7,7 @@ from pytoniq_core import Address, AddressError
 
 from src.bot.middleware import AntifloodMiddleware
 from src.common import r
-from src.services.jetton import jettons
+from src.services.jetton import jetton_service
 from src.utils import messages as msg
 from src.utils.formatters import format_jetton_info, format_dex_pools
 from src.bot.keyboards import (
@@ -41,7 +41,7 @@ async def jetton_callback(callback: types.CallbackQuery, callback_data: JettonCa
         await state.set_state('jetton_name')
 
     if callback_data.page == 'dexes':
-        dexes = await jettons.get_dexes()
+        dexes = await jetton_service.get_dexes()
         await callback.message.answer(text=msg.jetton_dexes, reply_markup=dexes_kb(dexes))
 
 
@@ -50,7 +50,7 @@ async def jetton_contract(message: types.Message, state: FSMContext):
     try:
         jetton_addr = Address(message.text)
 
-        jetton_info = await jettons.get_jetton_info(jetton_addr)
+        jetton_info = await jetton_service.get_jetton_info(jetton_addr)
 
         m = format_jetton_info(jetton_info)
         img = types.URLInputFile(jetton_info.img)
@@ -75,7 +75,7 @@ async def jetton_name(message: types.Message):
 @router.callback_query(DEXCallbackFactory.filter())
 async def dex_callback(callback: types.CallbackQuery, callback_data: DEXCallbackFactory):
     jetton_addr = Address(str(await r.getdel(name=callback.from_user.id), 'utf-8'))
-    dex_pools = await jettons.get_dex_pools(callback_data.dex, jetton_addr)
+    dex_pools = await jetton_service.get_dex_pools(callback_data.dex, jetton_addr)
 
     m = format_dex_pools(dex_pools)
     await callback.message.edit_text(text=m)

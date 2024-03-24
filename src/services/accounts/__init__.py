@@ -1,1 +1,1 @@
-from ._accounts import accounts_tonapi
+from ._accounts import accounts_service

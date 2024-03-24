@@ -1,1 +1,1 @@
-from ._contract import contract
+from ._contract import contract_service

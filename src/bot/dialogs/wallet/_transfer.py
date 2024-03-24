@@ -26,7 +26,7 @@ from src.utils import messages as msg
 from src.utils.formatters import format_dialog_nft_item
 from src.bot.keyboards import wallet_actions_kb, wallet_return_kb
 from src.ton import Connector, TONTransferTransaction, JettonTransferTransaction, NFTTransferTransaction, Provider
-from src.services.accounts import accounts_tonapi
+from src.services.accounts import accounts_service
 from src.services.nft import SelectedNftItem
 
 
@@ -98,7 +98,7 @@ async def nft_items_handler(callback: types.CallbackQuery, button: Button, dm: D
     connector = Connector(callback.from_user.id)
     await connector.restore_connection()
 
-    nft_items = await accounts_tonapi.get_all_nft_items(wallet_address=connector.account.address)
+    nft_items = await accounts_service.get_all_nft_items(wallet_address=connector.account.address)
 
     dm.dialog_data['nft_items'] = [
         SelectedNftItem(

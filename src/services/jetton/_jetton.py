@@ -1,16 +1,18 @@
 from pytoniq_core import Address
 
 from src.common import TonAPI
+from src.repos import JettonRepo
 
 from ._models import Token, DEX, JettonPool, DEXPools
-from ._gecko import gecko_terminal, GeckoTerminal
+from ._gecko import gecko_terminal
 
 
 class JettonService(TonAPI):
-    def __init__(self, gt: GeckoTerminal):
+    def __init__(self):
         super().__init__()
         self.jetton = self.tonapi.jettons
-        self.gt = gt
+        self.gt = gecko_terminal
+        self.repo = JettonRepo()
 
     async def get_jetton_info(self, jetton_addr: Address) -> Token:
         jetton_info = await self.jetton.get_info(
@@ -54,5 +56,8 @@ class JettonService(TonAPI):
 
         return dex_pools
 
+    async def get_jettons(self) -> str:
+        db_jettons = await self.repo.get_jettons()
 
-jettons = JettonService(gt=gecko_terminal)
+
+jetton_service = JettonService()

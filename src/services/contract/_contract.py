@@ -21,4 +21,4 @@ class ContractService:
         return code
 
 
-contract = ContractService(token=config.GITHUB_API_KEY)
+contract_service = ContractService(token=config.GITHUB_API_KEY)

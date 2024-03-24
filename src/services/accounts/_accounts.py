@@ -42,4 +42,4 @@ class AccountsService(TonAPI):
         ]
 
 
-accounts_tonapi = AccountsService()
+accounts_service = AccountsService()
