@@ -5,7 +5,7 @@ from ._getgems import gg
 from src.common import TonAPI
 
 
-class Nft(TonAPI):
+class NftService(TonAPI):
     def __init__(self):
         super().__init__()
         self.nft = self.tonapi.nft
@@ -47,4 +47,4 @@ class Nft(TonAPI):
         )
 
 
-nft_tonapi = Nft()
+nft_tonapi = NftService()

@@ -2,7 +2,7 @@ from ._github import get_code_from_file
 from src.common import config
 
 
-class Contract:
+class ContractService:
     def __init__(self, token):
         self.token = token
 
@@ -21,4 +21,4 @@ class Contract:
         return code
 
 
-contract = Contract(token=config.GITHUB_API_KEY)
+contract = ContractService(token=config.GITHUB_API_KEY)

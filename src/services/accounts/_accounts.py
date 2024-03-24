@@ -4,7 +4,7 @@ from src.common import TonAPI
 from src.services.nft import NftItem
 
 
-class Accounts(TonAPI):
+class AccountsService(TonAPI):
     def __init__(self):
         super().__init__()
         self.accounts = self.tonapi.accounts
@@ -42,4 +42,4 @@ class Accounts(TonAPI):
         ]
 
 
-accounts_tonapi = Accounts()
+accounts_tonapi = AccountsService()

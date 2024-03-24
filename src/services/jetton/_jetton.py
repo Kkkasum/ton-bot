@@ -6,7 +6,7 @@ from ._models import Token, DEX, JettonPool, DEXPools
 from ._gecko import gecko_terminal, GeckoTerminal
 
 
-class Jetton(TonAPI):
+class JettonService(TonAPI):
     def __init__(self, gt: GeckoTerminal):
         super().__init__()
         self.jetton = self.tonapi.jettons
@@ -55,4 +55,4 @@ class Jetton(TonAPI):
         return dex_pools
 
 
-jettons = Jetton(gt=gecko_terminal)
+jettons = JettonService(gt=gecko_terminal)
