@@ -25,3 +25,4 @@ class Config(BaseSettings):
 
 
 config = Config()
+DB_URL = f'postgresql+asyncpg://{config.PG_USER}:{config.PG_PASS}@{config.PG_HOST}:{config.PG_PORT}/{config.PG_NAME}'
