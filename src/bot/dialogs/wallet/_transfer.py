@@ -1,6 +1,6 @@
 import operator
 
-from aiogram import Router, types
+from aiogram import types
 from aiogram.exceptions import TelegramBadRequest
 
 from aiogram_dialog import Dialog, DialogManager, Window, ShowMode
@@ -26,11 +26,8 @@ from src.utils import messages as msg
 from src.utils.formatters import format_dialog_nft_item
 from src.bot.keyboards import wallet_actions_kb, wallet_return_kb
 from src.ton import Connector, TONTransferTransaction, JettonTransferTransaction, NFTTransferTransaction, Provider
-from src.accounts import accounts_tonapi
-from src.nft import SelectedNftItem
-
-
-router = Router()
+from src.services.accounts import accounts_tonapi
+from src.services.nft import SelectedNftItem
 
 
 async def get_data(dialog_manager: DialogManager, **_):
@@ -56,8 +53,6 @@ async def address_handler(message: types.Message, message_input: MessageInput, d
         return
 
     dm.dialog_data['address'] = address.to_str(is_user_friendly=True)
-
-    # print(await accounts_tonapi.get_all_jettons(wallet_address=dm.dialog_data['address']))
 
     await dm.switch_to(state=TransferStates.token, show_mode=ShowMode.DELETE_AND_SEND)
 

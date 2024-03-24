@@ -1,7 +1,7 @@
 from pytoniq_core import Address
 
 from src.common import TonAPI
-from src.nft import NftItem
+from src.services.nft import NftItem
 
 
 class Accounts(TonAPI):

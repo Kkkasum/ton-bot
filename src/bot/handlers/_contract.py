@@ -1,7 +1,6 @@
 from aiogram import Router, types, F
 
 from src.utils import messages as msg
-from src.contract import contract
 from src.bot.keyboards import (
     contract_kb,
     contract_templates_kb,

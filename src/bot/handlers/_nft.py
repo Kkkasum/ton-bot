@@ -6,7 +6,7 @@ from aiogram.exceptions import TelegramBadRequest
 from pytoniq_core import Address, AddressError
 
 from src.bot.middleware import AntifloodMiddleware
-from src.nft import nft_tonapi, gg
+from src.services.nft import nft_tonapi, gg
 from src.common import r
 from src.utils import messages as msg
 from src.utils.formatters import format_nft_collection, format_nft_item

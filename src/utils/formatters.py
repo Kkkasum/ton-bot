@@ -1,5 +1,5 @@
-from src.jetton import Token, DEXPools
-from src.nft import NftCollection, NftItem, SelectedNftItem
+from src.services.jetton import Token, DEXPools
+from src.services.nft import NftCollection, NftItem, SelectedNftItem
 
 
 def format_connection(url: str) -> str:

@@ -7,7 +7,7 @@ from pytoniq_core import Address, AddressError
 
 from src.bot.middleware import AntifloodMiddleware
 from src.common import r
-from src.jetton import jettons
+from src.services.jetton import jettons
 from src.utils import messages as msg
 from src.utils.formatters import format_jetton_info, format_dex_pools
 from src.bot.keyboards import (

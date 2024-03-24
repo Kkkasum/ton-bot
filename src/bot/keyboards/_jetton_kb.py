@@ -4,7 +4,7 @@ from aiogram.filters.callback_data import CallbackData
 from pytoniq_core import Address
 
 from ._menu_kb import MenuCallbackFactory
-from src.jetton import DEX
+from src.services.jetton import DEX
 
 
 class JettonCallbackFactory(CallbackData, prefix='jetton'):

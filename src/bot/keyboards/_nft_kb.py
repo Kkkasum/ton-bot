@@ -2,7 +2,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardMarkup, 
 from aiogram.filters.callback_data import CallbackData
 
 from ._menu_kb import MenuCallbackFactory
-from src.nft import NftCollection, NftItem
+from src.services.nft import NftCollection, NftItem
 
 
 class NftCallbackFactory(CallbackData, prefix='nft'):
