@@ -11,6 +11,10 @@ class JettonCallbackFactory(CallbackData, prefix='jetton'):
     page: str
 
 
+class JettonsCallbackFactory(CallbackData, prefix='jettons'):
+    jetton: str
+
+
 class DEXCallbackFactory(CallbackData, prefix='dex'):
     dex: str
 
@@ -65,5 +69,16 @@ def dexes_kb(dexes: list[DEX]) -> InlineKeyboardMarkup:
         builder.button(text=dex.name, callback_data=DEXCallbackFactory(dex=dex.id))
         for dex in dexes
     ]
+
+    return builder.as_markup()
+
+
+def return_jetton_kb() -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(text='💎 Jetton', callback_data=MenuCallbackFactory(page='jetton'))
+    builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
+
+    builder.adjust(1)
 
     return builder.as_markup()

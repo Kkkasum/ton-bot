@@ -49,7 +49,7 @@ def wallet_actions_kb() -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def wallet_return_kb() -> InlineKeyboardMarkup:
+def return_wallet_kb() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     builder.button(text='💰 Кошелек', callback_data=MenuCallbackFactory(page='wallet'))

@@ -8,6 +8,9 @@ from src.bot.keyboards import app_kb, AppCallbackFactory, MenuCallbackFactory
 
 router = Router()
 
+# TODO: add apps to database
+# TODO: add apps handlers
+
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'app'))
 async def app_menu(callback: types.CallbackQuery, **_):

@@ -1,10 +1,9 @@
 from pytoniq_core import Address
 
+from ._models import Token, DEX, JettonPool, DEXPools, SelectJetton
+from ._gecko import gecko_terminal
 from src.common import TonAPI
 from src.repos import JettonRepo
-
-from ._models import Token, DEX, JettonPool, DEXPools
-from ._gecko import gecko_terminal
 
 
 class JettonService(TonAPI):
@@ -14,19 +13,40 @@ class JettonService(TonAPI):
         self.gt = gecko_terminal
         self.repo = JettonRepo()
 
-    async def get_jetton_info(self, jetton_addr: Address) -> Token:
+    async def get_select_jettons(self) -> list[SelectJetton]:
+        res_jettons = await self.repo.get_jettons()
+
+        select_jettons = [
+            SelectJetton(
+                index=index,
+                symbol=jetton[0],
+                address=jetton[1]
+            )
+            for index, jetton in enumerate(res_jettons)
+        ]
+
+        return select_jettons
+
+    async def get_jetton_by_address(self, jetton_master_addr: Address) -> Token:
         jetton_info = await self.jetton.get_info(
-            account_id=jetton_addr.to_str(is_user_friendly=False)
+            account_id=jetton_master_addr.to_str(is_user_friendly=False)
         )
 
         return Token(
             name=jetton_info.metadata.name,
-            address=jetton_addr,
+            address=jetton_master_addr,
             symbol=jetton_info.metadata.symbol,
             total_supply=jetton_info.total_supply,
             holders_count=jetton_info.holders_count,
             img=jetton_info.metadata.image
         )
+
+    async def get_jetton_by_symbol(self, symbol: str):
+        jetton_master_addr = Address(await self.repo.get_jetton_master_address(symbol))
+
+        jetton_info = await self.get_jetton_by_address(jetton_master_addr)
+
+        return jetton_info
 
     async def get_dexes(self) -> list[DEX]:
         dexes = await self.gt.get_dexes()
@@ -39,8 +59,8 @@ class JettonService(TonAPI):
             for dex in dexes
         ]
 
-    async def get_dex_pools(self, dex: str, jetton_addr: Address) -> DEXPools:
-        jetton_pools = await self.gt.get_token_pools(jetton_addr.to_str())
+    async def get_dex_pools(self, dex: str, jetton_master_addr: Address) -> DEXPools:
+        jetton_pools = await self.gt.get_token_pools(jetton_master_addr.to_str())
         dex_pools = DEXPools(
             pools=[
                 JettonPool(
@@ -55,9 +75,6 @@ class JettonService(TonAPI):
         )
 
         return dex_pools
-
-    async def get_jettons(self) -> str:
-        db_jettons = await self.repo.get_jettons()
 
 
 jetton_service = JettonService()

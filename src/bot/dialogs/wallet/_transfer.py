@@ -24,10 +24,10 @@ from pytonconnect.exceptions import UserRejectsError, WalletNotConnectedError
 from ._states import TransferStates
 from src.utils import messages as msg
 from src.utils.formatters import format_dialog_nft_item
-from src.bot.keyboards import wallet_actions_kb, wallet_return_kb
+from src.bot.keyboards import wallet_actions_kb, return_wallet_kb
 from src.ton import Connector, TONTransferTransaction, JettonTransferTransaction, NFTTransferTransaction, Provider
 from src.services.accounts import accounts_service
-from src.services.nft import SelectedNftItem
+from src.services.nft import SelectNftItem
 
 
 async def get_data(dialog_manager: DialogManager, **_):
@@ -86,7 +86,7 @@ async def nft_address_handler(message: types.Message, message_input: MessageInpu
     try:
         Address(message.text)
     except AddressError:
-        await message.answer(text=msg.nft_contract_error, reply_markup=wallet_return_kb())
+        await message.answer(text=msg.nft_contract_error, reply_markup=return_wallet_kb())
         await dm.done()
 
     dm.dialog_data['nft_address'] = message.text
@@ -101,7 +101,7 @@ async def nft_items_handler(callback: types.CallbackQuery, button: Button, dm: D
     nft_items = await accounts_service.get_all_nft_items(wallet_address=connector.account.address)
 
     dm.dialog_data['nft_items'] = [
-        SelectedNftItem(
+        SelectNftItem(
             index=index,
             name=nft_item.name,
             address=nft_item.address.to_str(),
@@ -206,7 +206,7 @@ async def confirm_transaction_handler(callback: types.CallbackQuery, button: But
         await callback.message.answer(text=msg.wallet_not_connected)
     finally:
         await approve_msg.delete()
-        await callback.message.answer(text=msg.menu, reply_markup=wallet_return_kb())
+        await callback.message.answer(text=msg.menu, reply_markup=return_wallet_kb())
 
     await dm.done()
 
@@ -260,7 +260,7 @@ dialog = Dialog(
         MessageInput(nft_address_handler, content_types=[types.ContentType.TEXT]),
         Cancel(Const('◀ Кошелек'), on_click=cancel_handler),
         state=TransferStates.nft_address
-    ),
+    ),  # input nft address for transfer
     Window(
         Const(msg.wallet_dialog_nft_items),
         ScrollingGroup(
@@ -277,14 +277,14 @@ dialog = Dialog(
         ),
         getter=get_data,
         state=TransferStates.nft_items
-    ),
+    ),  # choose nft to transfer
     Window(
         Const(msg.wallet_dialog_comment_input),
         MessageInput(comment_handler, content_types=[types.ContentType.TEXT]),
         Button(Const('Без комментария'), id='empty_comment', on_click=empty_comment_handler),
         Cancel(Const('◀ Кошелек'), on_click=cancel_handler),
         state=TransferStates.comment
-    ),
+    ),  # comment
     Window(
         Multi(
             Format(msg.wallet_dialog_address),

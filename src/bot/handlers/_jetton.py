@@ -3,6 +3,8 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.exceptions import TelegramBadRequest
 
+from aiogram_dialog import DialogManager, StartMode
+
 from pytoniq_core import Address, AddressError
 
 from src.bot.middleware import AntifloodMiddleware
@@ -10,6 +12,7 @@ from src.common import r
 from src.services.jetton import jetton_service
 from src.utils import messages as msg
 from src.utils.formatters import format_jetton_info, format_dex_pools
+from src.bot.dialogs import include_jetton_dialog, JettonStates
 from src.bot.keyboards import (
     jetton_kb,
     jetton_info_kb,
@@ -22,6 +25,7 @@ from src.bot.keyboards import (
 
 router = Router()
 router.callback_query.middleware(AntifloodMiddleware())
+include_jetton_dialog(router)
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'jetton'))
@@ -30,19 +34,26 @@ async def jetton_menu(callback: types.CallbackQuery, **_):
     await callback.message.answer(text=msg.jetton, reply_markup=jetton_kb())
 
 
-@router.callback_query(JettonCallbackFactory.filter())
-async def jetton_callback(callback: types.CallbackQuery, callback_data: JettonCallbackFactory, state: FSMContext):
-    if callback_data.page == 'contract':
-        await callback.message.edit_text(text=msg.jetton_contract)
-        await state.set_state('jetton_contract')
+@router.callback_query(JettonCallbackFactory.filter(F.page == 'contract'))
+async def jetton_callback_contract(callback: types.CallbackQuery, callback_data: JettonCallbackFactory, state: FSMContext):
+    await callback.message.edit_text(text=msg.jetton_contract)
+    await state.set_state('jetton_contract')
 
-    if callback_data.page == 'name':
-        await callback.message.edit_text(text=msg.jetton_name)
-        await state.set_state('jetton_name')
 
-    if callback_data.page == 'dexes':
-        dexes = await jetton_service.get_dexes()
-        await callback.message.answer(text=msg.jetton_dexes, reply_markup=dexes_kb(dexes))
+@router.callback_query(JettonCallbackFactory.filter(F.page == 'name'))
+async def jetton_callback_name(callback: types.CallbackQuery, dialog_manager: DialogManager, **_):
+    data = {
+        'jettons': await jetton_service.get_select_jettons()
+    }
+
+    # может быть нужно StartMode.NEW_STACK
+    await dialog_manager.start(state=JettonStates.symbol, data=data, mode=StartMode.RESET_STACK)
+
+
+@router.callback_query(JettonCallbackFactory.filter(F.page == 'dexes'))
+async def jetton_callback_dex(callback: types.CallbackQuery, callback_data: JettonCallbackFactory, state: FSMContext):
+    dexes = await jetton_service.get_dexes()
+    await callback.message.answer(text=msg.jetton_dexes, reply_markup=dexes_kb(dexes))
 
 
 @router.message(StateFilter('jetton_contract'))
@@ -50,10 +61,10 @@ async def jetton_contract(message: types.Message, state: FSMContext):
     try:
         jetton_addr = Address(message.text)
 
-        jetton_info = await jetton_service.get_jetton_info(jetton_addr)
+        jetton = await jetton_service.get_jetton_by_address(jetton_addr)
 
-        m = format_jetton_info(jetton_info)
-        img = types.URLInputFile(jetton_info.img)
+        m = format_jetton_info(jetton)
+        img = types.URLInputFile(jetton.img)
 
         try:
             await message.answer_photo(photo=img, caption=m, reply_markup=jetton_info_kb(jetton_addr))
@@ -68,8 +79,13 @@ async def jetton_contract(message: types.Message, state: FSMContext):
 
 
 @router.message(StateFilter('jetton_name'))
-async def jetton_name(message: types.Message):
-    pass
+async def jetton_name(_, dialog_manager: DialogManager):
+    jettons = await jetton_service.get_jettons()
+
+    dialog_manager.dialog_data['jettons'] = jettons
+
+    # может быть нужно StartMode.NEW_STACK
+    await dialog_manager.start(state=JettonStates.symbol, mode=StartMode.RESET_STACK)
 
 
 @router.callback_query(DEXCallbackFactory.filter())

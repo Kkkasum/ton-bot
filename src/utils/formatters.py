@@ -1,5 +1,5 @@
 from src.services.jetton import Token, DEXPools
-from src.services.nft import NftCollection, NftItem, SelectedNftItem
+from src.services.nft import NftCollection, NftItem, SelectNftItem
 
 
 def format_connection(url: str) -> str:
@@ -52,7 +52,7 @@ def format_nft_item(nft_item: NftItem) -> str:
     return nft_item_msg
 
 
-def format_dialog_nft_item(nft_item: SelectedNftItem) -> str:
+def format_dialog_nft_item(nft_item: SelectNftItem) -> str:
     nft_item_msg = f'Название: <b>{nft_item.name}</b>\n'\
                    f'Адрес NFT: <code>{nft_item.address}</code>'
 

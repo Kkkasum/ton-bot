@@ -49,3 +49,12 @@ class JettonPool(BaseModel):
 
 class DEXPools(BaseModel):
     pools: list[JettonPool]
+
+
+class SelectJetton(BaseModel):
+    index: int
+    symbol: str
+    address: str
+
+    def __getitem__(self, key):
+        return list(self.__dict__.values())[key]

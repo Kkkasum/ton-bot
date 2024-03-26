@@ -76,7 +76,7 @@ class NftCollection(BaseModel):
         return '\n' + '\n'.join(self.social_links) if self.social_links else None
 
 
-class SelectedNftItem(BaseModel):
+class SelectNftItem(BaseModel):
     index: int
     name: str
     address: str

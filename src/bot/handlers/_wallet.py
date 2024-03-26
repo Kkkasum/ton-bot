@@ -13,7 +13,7 @@ import qrcode
 from src.ton import Connector
 from src.utils import messages as msg
 from src.utils.formatters import format_connection
-from src.bot.dialogs import include_dialog, TransferStates
+from src.bot.dialogs import include_transfer_dialog, TransferStates
 from src.bot.keyboards import (
     wallets_kb,
     wallet_try_again_kb,
@@ -26,7 +26,7 @@ from src.bot.keyboards import (
 
 
 router = Router()
-include_dialog(router)
+include_transfer_dialog(router)
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'wallet'))
@@ -100,7 +100,7 @@ async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCa
 
 @router.callback_query(WalletActionCallbackFactory.filter(F.action == 'transfer'))
 async def wallet_transfer(_, dialog_manager: DialogManager):
-    await dialog_manager.start(TransferStates.address, mode=StartMode.RESET_STACK)
+    await dialog_manager.start(state=TransferStates.address, mode=StartMode.RESET_STACK)
 
 
 @router.callback_query(WalletActionCallbackFactory.filter(F.action == 'disconnect'))

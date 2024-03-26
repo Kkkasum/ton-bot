@@ -9,7 +9,7 @@ class JettonRepo(Database):
 
     async def get_jettons(self):
         async with self.session_maker() as session:
-            query = select(Jetton.name)
+            query = select(Jetton.symbol, Jetton.master_address)
             res = await session.execute(query)
 
         return res.fetchall()
