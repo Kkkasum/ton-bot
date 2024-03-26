@@ -1,10 +1,11 @@
 import operator
+import asyncio
 
 from aiogram import Router, types
 from aiogram.exceptions import TelegramBadRequest
 
 from aiogram_dialog import Dialog, DialogManager, Window, ShowMode
-from aiogram_dialog.widgets.kbd import ScrollingGroup, Select
+from aiogram_dialog.widgets.kbd import ScrollingGroup, Select, Button, Cancel
 from aiogram_dialog.widgets.text import Const, Format
 
 from pytoniq_core import Address
@@ -14,7 +15,7 @@ from src.common import r
 from src.utils import messages as msg
 from src.utils.formatters import format_jetton_info
 from src.services.jetton import jetton_service
-from src.bot.keyboards import jetton_info_kb
+from src.bot.keyboards import jetton_info_kb, jetton_kb
 
 
 router = Router()
@@ -36,6 +37,9 @@ async def on_jetton_selected(callback: types.CallbackQuery, s_btn: Select, dm: D
     m = format_jetton_info(jetton)
     img = types.URLInputFile(jetton.img)
 
+    await asyncio.sleep(1)
+
+    await callback.message.delete()
     try:
         await callback.message.answer_photo(photo=img, caption=m, reply_markup=jetton_info_kb(jetton_addr))
     except (AssertionError, TelegramBadRequest):
@@ -46,9 +50,14 @@ async def on_jetton_selected(callback: types.CallbackQuery, s_btn: Select, dm: D
     await dm.done()
 
 
+async def cancel_handler(callback: types.CallbackQuery, button: Button, dm: DialogManager):
+    await callback.message.delete()
+    await callback.message.answer(text=msg.jetton, reply_markup=jetton_kb())
+
+
 dialog = Dialog(
     Window(
-        Const(msg.wallet_dialog_nft_items),
+        Const(msg.jetton_dialog_select_jetton),
         ScrollingGroup(
             Select(
                 Format('{item[1]}'),
@@ -59,8 +68,10 @@ dialog = Dialog(
             ),
             id='jettons',
             width=1,
-            height=5
+            height=5,
+            hide_on_single_page=True,
         ),
+        Cancel(Const('◀ Jetton'), on_click=cancel_handler),
         getter=get_data,
         state=JettonStates.symbol
     )

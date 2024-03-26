@@ -35,23 +35,26 @@ async def jetton_menu(callback: types.CallbackQuery, **_):
 
 
 @router.callback_query(JettonCallbackFactory.filter(F.page == 'contract'))
-async def jetton_callback_contract(callback: types.CallbackQuery, callback_data: JettonCallbackFactory, state: FSMContext):
-    await callback.message.edit_text(text=msg.jetton_contract)
+async def jetton_callback_contract(callback: types.CallbackQuery, state: FSMContext, **_):
+    await callback.message.delete()
+    await callback.message.answer(text=msg.jetton_contract)
+
     await state.set_state('jetton_contract')
 
 
 @router.callback_query(JettonCallbackFactory.filter(F.page == 'name'))
 async def jetton_callback_name(callback: types.CallbackQuery, dialog_manager: DialogManager, **_):
-    data = {
-        'jettons': await jetton_service.get_select_jettons()
-    }
-
-    # может быть нужно StartMode.NEW_STACK
-    await dialog_manager.start(state=JettonStates.symbol, data=data, mode=StartMode.RESET_STACK)
+    await dialog_manager.start(
+        state=JettonStates.symbol,
+        data={
+            'jettons': await jetton_service.get_select_jettons()
+        },
+        mode=StartMode.RESET_STACK
+    )
 
 
 @router.callback_query(JettonCallbackFactory.filter(F.page == 'dexes'))
-async def jetton_callback_dex(callback: types.CallbackQuery, callback_data: JettonCallbackFactory, state: FSMContext):
+async def jetton_callback_dex(callback: types.CallbackQuery, **_):
     dexes = await jetton_service.get_dexes()
     await callback.message.answer(text=msg.jetton_dexes, reply_markup=dexes_kb(dexes))
 
@@ -76,16 +79,6 @@ async def jetton_contract(message: types.Message, state: FSMContext):
     except (AddressError, ValueError):
         await message.answer(text=msg.jetton_contract_error)
         await message.answer(text=msg.jetton_contract)
-
-
-@router.message(StateFilter('jetton_name'))
-async def jetton_name(_, dialog_manager: DialogManager):
-    jettons = await jetton_service.get_jettons()
-
-    dialog_manager.dialog_data['jettons'] = jettons
-
-    # может быть нужно StartMode.NEW_STACK
-    await dialog_manager.start(state=JettonStates.symbol, mode=StartMode.RESET_STACK)
 
 
 @router.callback_query(DEXCallbackFactory.filter())
