@@ -3,6 +3,9 @@ from aiogram.filters import ExceptionTypeFilter
 
 from aiogram_dialog.api.exceptions import UnknownIntent, UnknownState
 
+from .app import (
+    app_dialog
+)
 from .jetton import (
     jetton_dialog,
     on_unknown_intent as jetton_on_unknown_intent,
@@ -13,6 +16,10 @@ from .wallet import (
     on_unknown_intent as wallet_on_unknown_intent,
     on_unknown_state as wallet_on_unknown_state
 )
+
+
+def include_app_dialog(router: Router):
+    router.include_router(app_dialog)
 
 
 # можно поменять, чтобы в файлах с диалогом был свой роутер, потом этот роутер включать в роутер хэндлера

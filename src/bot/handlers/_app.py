@@ -1,41 +1,30 @@
 from aiogram import Router, F, types
-from aiogram.filters import StateFilter
-from aiogram.fsm.context import FSMContext
+
+from aiogram_dialog import DialogManager, StartMode
 
 from src.utils import messages as msg
-from src.bot.keyboards import app_kb, AppCallbackFactory, MenuCallbackFactory
+from src.services.app import app_service
+from src.bot.keyboards import categories_kb, AppCategoryCallbackFactory, MenuCallbackFactory
+from src.bot.dialogs import include_app_dialog, AppStates
 
 
 router = Router()
-
-# TODO: add apps to database
-# TODO: add apps handlers
+include_app_dialog(router)
 
 
 @router.callback_query(MenuCallbackFactory.filter(F.page == 'app'))
 async def app_menu(callback: types.CallbackQuery, **_):
     await callback.message.delete()
-    await callback.message.answer(text=msg.app, reply_markup=app_kb())
+    await callback.message.answer(text=msg.app, reply_markup=categories_kb(app_service.categories))
 
 
-@router.callback_query(AppCallbackFactory.filter())
-async def app_callback(callback: types.CallbackQuery, callback_data: AppCallbackFactory):
-    if callback_data.page == 'wallets':
-        pass
-
-    if callback_data.page == 'defi':
-        pass
-
-    if callback_data.page == 'nfts':
-        pass
-
-    if callback_data.page == 'gamefi':
-        pass
-
-    if callback_data.page == 'utility':
-        pass
-
-
-@router.message(StateFilter('wallets'))
-async def wallets(message: types.Message, state: FSMContext):
-    pass
+@router.callback_query(AppCategoryCallbackFactory.filter())
+async def app_category_callback(callback: types.CallbackQuery, dialog_manager: DialogManager, callback_data: AppCategoryCallbackFactory):
+    await dialog_manager.start(
+        state=AppStates.app,
+        data={
+            'category': callback_data.page,
+            'apps': await app_service.get_apps_by_category(category=callback_data.page)
+        },
+        mode=StartMode.RESET_STACK
+    )

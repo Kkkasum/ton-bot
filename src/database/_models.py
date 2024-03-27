@@ -8,11 +8,12 @@ Base = declarative_base()
 
 
 class AppCategory(Enum):
-    wallet = 'wallet'
-    defi = 'defi'
-    nft = 'nft'
-    gamefi = 'gamefi'
-    utils = 'utils'
+    wallet = 'Wallet'
+    defi = 'DeFi'
+    nft = 'NFT'
+    gamefi = 'GameFi'
+    viewer = 'Viewer'
+    utils = 'Utils'
 
 
 class Jetton(Base):
@@ -32,15 +33,7 @@ class App(Base):
     description: Mapped[str | None]
     url: Mapped[str | None]
     tg_links: Mapped[str | None]
-
-
-# Apps
-# name
-# description
-# platforms
-# tg links
-# url
-
+    img: Mapped[str | None]
 
 # Contract Templates
 # name
@@ -48,8 +41,3 @@ class App(Base):
 # github code url
 # contract standard
 # ton docs
-
-
-# Jetton
-# name
-# jetton_master_address

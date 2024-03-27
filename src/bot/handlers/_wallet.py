@@ -10,7 +10,7 @@ from pytoniq_core import Address, AddressError
 
 import qrcode
 
-from src.ton import Connector
+from src.services.ton import Connector
 from src.utils import messages as msg
 from src.utils.formatters import format_connection
 from src.bot.dialogs import include_transfer_dialog, TransferStates

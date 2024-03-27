@@ -85,6 +85,9 @@ nft_contract_error = 'Вы ввели неправильный адрес NFT'
 # App
 app = 'Выберите категорию приложения:'
 
+# App Dialog
+app_dialog_select_app = 'Выберите приложение:'
+
 # Contract
 contract = 'Выберите действие:'
 

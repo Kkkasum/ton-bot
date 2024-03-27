@@ -24,7 +24,7 @@ from ._states import TransferStates
 from src.utils import messages as msg
 from src.utils.formatters import format_dialog_nft_item
 from src.bot.keyboards import wallet_actions_kb, return_wallet_kb
-from src.ton import Connector, TONTransferTransaction, JettonTransferTransaction, NFTTransferTransaction, Provider
+from src.services.ton import Connector, TONTransferTransaction, JettonTransferTransaction, NFTTransferTransaction, Provider
 from src.services.accounts import accounts_service
 from src.services.jetton import jetton_service
 from src.services.nft import SelectNftItem
@@ -151,9 +151,13 @@ async def empty_comment_handler(callback: types.CallbackQuery, button: Button, d
         await dm.switch_to(state=TransferStates.nft_finish, show_mode=ShowMode.DELETE_AND_SEND)
 
 
-async def cancel_handler(callback: types.CallbackQuery, button: Button, dm: DialogManager):
+async def cancel_handler(callback: types.CallbackQuery, *_):
     await callback.message.delete()
     await callback.message.answer(text=msg.menu, reply_markup=wallet_actions_kb())
+
+
+async def back_handler(callback: types.CallbackQuery, button: Button, dm: DialogManager):
+    await dm.back()
 
 
 async def confirm_transaction_handler(callback: types.CallbackQuery, button: Button, dm: DialogManager):
@@ -220,7 +224,7 @@ dialog = Dialog(
             SwitchTo(Const('NFT'), id='nft', state=TransferStates.nft),
         ),
         Cancel(Const('◀ Кошелек'), on_click=cancel_handler),
-        Back(Const('◀ Назад')),
+        Back(Const('◀ Назад'), on_click=back_handler),
         state=TransferStates.token
     ),  # choose token to transfer
     Window(
@@ -239,7 +243,7 @@ dialog = Dialog(
             hide_on_single_page=True,
         ),
         Cancel(Const('◀ Кошелек'), on_click=cancel_handler),
-        Back(Const('◀ Назад')),
+        Back(Const('◀ Назад'), on_click=back_handler),
         getter=get_data,
         state=TransferStates.jetton
     ),  # choose jetton to transfer
@@ -247,7 +251,7 @@ dialog = Dialog(
         Format(msg.wallet_dialog_amount_input),
         MessageInput(amount_handler, content_types=[types.ContentType.TEXT]),
         Cancel(Const('◀ Кошелек'), on_click=cancel_handler),
-        Back(Const('◀ Назад')),
+        Back(Const('◀ Назад'), on_click=back_handler),
         getter=get_data,
         state=TransferStates.amount
     ),  # input ton or jetton amount
@@ -256,7 +260,7 @@ dialog = Dialog(
         SwitchTo(Const('По адресу NFT'), id='nft_address', state=TransferStates.nft_address),
         Button(Const('Выбрать из доступных'), id='available_nft_items', on_click=nft_items_handler),
         Cancel(Const('◀ Кошелек'), on_click=cancel_handler),
-        Back(Const('◀ Назад')),
+        Back(Const('◀ Назад'), on_click=back_handler),
         state=TransferStates.nft
     ),  # choose the way for nft input
     Window(
