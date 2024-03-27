@@ -4,7 +4,6 @@ from aiogram_dialog import setup_dialogs
 
 from src.common import bot, dp
 from src.bot import include_routers
-from src.services.app import app_service
 
 
 async def main():

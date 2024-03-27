@@ -16,8 +16,8 @@ class NftCollectionHistoryCallbackFactory(CallbackData, prefix='nft_collection_h
 def nft_kb() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
-    builder.button(text='По адресу контракта', callback_data=NftCallbackFactory(page='contract'))
-    builder.button(text='По названию', callback_data=NftCallbackFactory(page='name'))
+    builder.button(text='По адресу контракта', callback_data=NftCallbackFactory(page='by_contract'))
+    builder.button(text='По названию', callback_data=NftCallbackFactory(page='by_name'))
     builder.button(text='☰ Главное меню', callback_data=MenuCallbackFactory(page='menu'))
 
     builder.adjust(1)

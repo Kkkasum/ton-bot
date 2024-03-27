@@ -19,7 +19,7 @@ async def app_menu(callback: types.CallbackQuery, **_):
 
 
 @router.callback_query(AppCategoryCallbackFactory.filter())
-async def app_category_callback(callback: types.CallbackQuery, dialog_manager: DialogManager, callback_data: AppCategoryCallbackFactory):
+async def app_category_callback(_, dialog_manager: DialogManager, callback_data: AppCategoryCallbackFactory):
     await dialog_manager.start(
         state=AppStates.app,
         data={

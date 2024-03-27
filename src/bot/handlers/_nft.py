@@ -32,22 +32,30 @@ async def nft_menu(callback: types.CallbackQuery, **_):
     await callback.message.answer(text=msg.nft, reply_markup=nft_kb())
 
 
-@router.callback_query(NftCallbackFactory.filter())
-async def nft_callback(callback: types.CallbackQuery, callback_data: NftCallbackFactory, state: FSMContext):
-    if callback_data.page == 'contract':
-        await callback.message.edit_text(text=msg.nft_search, reply_markup=nft_search_kb(by_contract=True))
+@router.callback_query(NftCallbackFactory.filter(F.page.startswith('by_')))
+async def nft_search_methods_callback(callback: types.CallbackQuery, callback_data: NftCallbackFactory):
+    await callback.message.delete()
 
-    if callback_data.page == 'name':
-        await callback.message.edit_text(text=msg.nft_search, reply_markup=nft_search_kb(by_contract=False))
+    if callback_data.page == 'by_contract':
+        await callback.message.answer(text=msg.nft_search, reply_markup=nft_search_kb(by_contract=True))
+    elif callback_data.page == 'by_name':
+        await callback.message.answer(text=msg.nft_search, reply_markup=nft_search_kb(by_contract=False))
+
+
+@router.callback_query(NftCallbackFactory.filter(F.page.startswith('search')))
+async def nft_search_callback(callback: types.CallbackQuery, callback_data: NftCallbackFactory, state: FSMContext):
+    await callback.message.delete()
 
     if callback_data.page == 'search_collection':
-        await callback.message.edit_text(text=msg.nft_search_collection)
-        await state.set_state('search_collection')
+        await callback.message.answer(text=msg.nft_search_collection)
+    elif callback_data.page == 'search_nft':
+        await callback.message.answer(text=msg.nft_search_nft)
 
-    if callback_data.page == 'search_nft':
-        await callback.message.edit_text(text=msg.nft_search_nft)
-        await state.set_state('search_nft')
+    await state.set_state(callback_data.page)
 
+
+@router.callback_query(NftCallbackFactory.filter())
+async def nft_callback(callback: types.CallbackQuery, callback_data: NftCallbackFactory):
     if callback_data.page == 'collection_history':
         await callback.message.answer(text=msg.nft_collection_history, reply_markup=nft_collection_history_kb())
 

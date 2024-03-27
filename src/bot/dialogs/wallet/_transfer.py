@@ -46,7 +46,7 @@ async def address_handler(message: types.Message, message_input: MessageInput, d
     try:
         address = Address(message.text)
     except (AddressError, ValueError):
-        await message.answer(text=msg.wallet_address_error)
+        await message.answer(text=msg.wallet_dialog_address_error)
         await message.answer(text=msg.menu, reply_markup=wallet_actions_kb())
 
         await dm.done()
@@ -74,7 +74,7 @@ async def amount_handler(message: types.Message, message_input: MessageInput, dm
     try:
         amount = float(message.text.replace(',', '.'))
     except ValueError:
-        await message.answer(text=msg.wallet_amount_error)
+        await message.answer(text=msg.wallet_dialog_amount_error)
         await dm.done()
         return
 
@@ -201,7 +201,7 @@ async def confirm_transaction_handler(callback: types.CallbackQuery, button: But
     except UserRejectsError:
         await callback.message.answer(text=msg.wallet_dialog_rejected_transfer)
     except WalletNotConnectedError:
-        await callback.message.answer(text=msg.wallet_not_connected)
+        await callback.message.answer(text=msg.wallet_dialog_not_connected)
     finally:
         await approve_msg.delete()
         await callback.message.answer(text=msg.menu, reply_markup=return_wallet_kb())

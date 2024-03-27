@@ -43,7 +43,7 @@ async def jetton_callback_contract(callback: types.CallbackQuery, state: FSMCont
 
 
 @router.callback_query(JettonCallbackFactory.filter(F.page == 'name'))
-async def jetton_callback_name(callback: types.CallbackQuery, dialog_manager: DialogManager, **_):
+async def jetton_callback_name(_, dialog_manager: DialogManager):
     await dialog_manager.start(
         state=JettonStates.symbol,
         data={
@@ -56,6 +56,7 @@ async def jetton_callback_name(callback: types.CallbackQuery, dialog_manager: Di
 @router.callback_query(JettonCallbackFactory.filter(F.page == 'dexes'))
 async def jetton_callback_dex(callback: types.CallbackQuery, **_):
     dexes = await jetton_service.get_dexes()
+
     await callback.message.answer(text=msg.jetton_dexes, reply_markup=dexes_kb(dexes))
 
 

@@ -59,8 +59,9 @@ async def wallet_menu(callback: types.CallbackQuery, **_):
 
 @router.callback_query(WalletCallbackFactory.filter())
 async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCallbackFactory):
-    connector = Connector(callback.from_user.id)
+    await callback.message.delete()
 
+    connector = Connector(callback.from_user.id)
     while True:
         try:
             url = await connector.connect(connector.get_wallets()[callback_data.index])
@@ -74,7 +75,6 @@ async def wallet_callback(callback: types.CallbackQuery, callback_data: WalletCa
     qr = types.FSInputFile(f'images/{callback.from_user.id}.png')
     m = format_connection(url)
 
-    await callback.message.delete()
     connect_msg = await callback.message.answer_photo(photo=qr, caption=m)
 
     address = None
@@ -109,4 +109,5 @@ async def wallet_disconnect(callback: types.CallbackQuery, **_):
     await connector.restore_connection()
     await connector.disconnect()
 
-    await callback.message.edit_text(text=msg.wallet_disconnect, reply_markup=return_menu_kb())
+    await callback.message.delete()
+    await callback.message.answer(text=msg.wallet_disconnect, reply_markup=return_menu_kb())
